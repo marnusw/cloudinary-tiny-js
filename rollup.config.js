@@ -6,7 +6,7 @@ import uglify from 'rollup-plugin-uglify';
 const env = process.env.NODE_ENV
 const config = {
   format: 'umd',
-  moduleName: 'Redux',
+  moduleName: 'CloudinaryTinyJs',
   plugins: [
     nodeResolve({
       jsnext: true
