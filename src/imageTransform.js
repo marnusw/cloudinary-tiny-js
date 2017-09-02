@@ -31,7 +31,7 @@ const backgroundOptions = ['auto:border', 'auto:predominant', 'auto:border_contr
 // http://cloudinary.com/documentation/image_transformation_reference#color_parameter
 // A color name or rgb: followed by an rgb[a] or rrggbb[aa] hex value
 const colorRegex = /^(?:[a-z]+$|rgb:(?:[0-9a-f]{3,4}$|[0-9a-f]{6}$|[0-9a-f]{8}$))/i
-const colorRegexStr = colorRegex.toString().replace(/[/^i]/g, '')
+const rgb = 'rgb:'
 
 // http://cloudinary.com/documentation/image_transformation_reference#color_space_parameter
 const colorSpaceOptions = ['srgb', 'tinysrgb', 'no_cmyk']
@@ -58,27 +58,8 @@ export const formatParameter = (value) => {
   return value ? `.${value}` : ''
 }
 
-const numericParameters = {
-  height: 'h_',
-  zoom: 'z_',
-  x: 'x_',
-  y: 'y_',
-}
-
 export function compileParameter(parameter, value) {
   switch (parameter) {
-
-    case 'height':
-    case 'zoom':
-    case 'x':
-    case 'y':
-      process.env.NODE_ENV !== 'production' && invariant(
-        isNumber(value),
-        parameter, value, 'should be a number',
-      )
-      return numericParameters[parameter] + value
-
-    ////////////////////////////////////
 
     case 'width':
       process.env.NODE_ENV !== 'production' && invariant(
@@ -86,6 +67,14 @@ export function compileParameter(parameter, value) {
         'width', value, `should be a number, 'auto', or a string starting with 'auto:'`,
       )
       return 'w_' + value
+
+    ////////////////////////////////////
+
+    case 'height':
+      process.env.NODE_ENV !== 'production' && invariant(
+        isNumber(value), 'height', value, 'should be a number',
+      )
+      return 'h_' + value
 
     ////////////////////////////////////
 
@@ -113,6 +102,30 @@ export function compileParameter(parameter, value) {
         'gravity', value, `${shouldBeOneOf(gravityOptions)}, 'auto', or a string starting with 'auto:'`,
       )
       return 'g_' + value
+
+    ////////////////////////////////////
+
+    case 'zoom':
+      process.env.NODE_ENV !== 'production' && invariant(
+        isNumber(value), 'zoom', value, 'should be a number',
+      )
+      return 'z_' + value
+
+    ////////////////////////////////////
+
+    case 'x':
+      process.env.NODE_ENV !== 'production' && invariant(
+        isNumber(value), 'x', value, 'should be a number',
+      )
+      return 'x_' + value
+
+    ////////////////////////////////////
+
+    case 'y':
+      process.env.NODE_ENV !== 'production' && invariant(
+        isNumber(value), 'y', value, 'should be a number',
+      )
+      return 'y_' + value
 
     ////////////////////////////////////
 
@@ -180,20 +193,22 @@ export function compileParameter(parameter, value) {
         value = value.width + '_solid_' + value.color
       }
       process.env.NODE_ENV !== 'production' && invariant(
-        value.replace('#', 'rgb:').match(new RegExp(`^\\d+px_solid_${colorRegexStr}$`, 'i')),
+        value
+          .replace('#', rgb)
+          .match(new RegExp(`^\\d+px_solid_${colorRegex.toString().replace(/[/^i]/g, '')}$`, 'i')),
         'border', value, `should be an object with 'width' & 'color' or a string of the form 'width_style_color'`,
       )
-      return 'bo_' + value.toLowerCase().replace('#', 'rgb:')
+      return 'bo_' + value.toLowerCase().replace('#', rgb)
 
     ////////////////////////////////////
 
     case 'background':
       process.env.NODE_ENV !== 'production' && invariant(
         typeof value === 'string'
-        && (includes(value, backgroundOptions) || value.replace('#', 'rgb:').match(colorRegex)),
+        && (includes(value, backgroundOptions) || value.replace('#', rgb).match(colorRegex)),
         'background', value, `${shouldBeOneOf(backgroundOptions)} or a color`,
       )
-      return 'b_' + value.replace('#', 'rgb:')
+      return 'b_' + value.replace('#', rgb)
 
     ////////////////////////////////////
 
@@ -227,10 +242,10 @@ export function compileParameter(parameter, value) {
 
     case 'color':
       process.env.NODE_ENV !== 'production' && invariant(
-        value.replace('#', 'rgb:').match(colorRegex),
+        value.replace('#', rgb).match(colorRegex),
         'color', value, `must be a named color, short #rgb[a] or long #rrggbb[aa] hex value`,
       )
-      return 'co_' + value.replace('#', 'rgb:')
+      return 'co_' + value.replace('#', rgb)
 
     ////////////////////////////////////
 
@@ -295,16 +310,14 @@ function compileOverlay(value) {
 }
 
 // http://cloudinary.com/documentation/image_transformations#adding_text_captions
-function compileStringStyle(textOptions) {
-  const {
-    fontFamily, fontSize, fontWeight, fontStyle, textDecoration,
-    textAlign, stroke, letterSpacing, lineSpacing
-  } = textOptions
+function compileStringStyle(opts) {
+  const {letterSpacing, lineSpacing} = opts
 
   if (process.env.NODE_ENV !== 'production') {
+    const {fontFamily, fontSize, fontWeight, fontStyle, textDecoration, textAlign, stroke} = opts
     invariant(
       fontFamily && fontSize && isNumber(fontSize),
-      'text caption', JSON.stringify(textOptions), `required options are 'fontFamily' and 'fontSize'`,
+      'text caption', JSON.stringify(opts), `required options are 'fontFamily' and 'fontSize'`,
       '/image_transformations#adding_text_captions',
     )
     invariant(
@@ -315,14 +328,15 @@ function compileStringStyle(textOptions) {
       (!stroke || includes(stroke, ['none', 'stroke'])) &&
       (!letterSpacing || isNumber(letterSpacing)) &&
       (!lineSpacing || isNumber(lineSpacing)),
-      'text caption', JSON.stringify(textOptions), `options are invalid`,
+      'text caption', JSON.stringify(opts), `options are invalid`,
       '/image_transformations#adding_text_captions',
     )
   }
 
   return [
-    encodeURIComponent(fontFamily), fontSize, fontWeight, fontStyle, textDecoration, textAlign, stroke,
-    letterSpacing ? `letter_spacing_${letterSpacing}` : null,
-    lineSpacing ? `line_spacing_${lineSpacing}` : null,
+    encodeURIComponent(opts.fontFamily), opts.fontSize, opts.fontWeight, opts.fontStyle,
+    opts.textDecoration, opts.textAlign, opts.stroke,
+    letterSpacing ? `letter_spacing_${letterSpacing}` : 0,
+    lineSpacing ? `line_spacing_${lineSpacing}` : 0,
   ].filter(option => option && option !== 'normal' && option !== 'none').join('_')
 }

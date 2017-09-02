@@ -1,5 +1,5 @@
 import baseUrl from './baseUrl'
-import { compileFormat, compileTransforms } from './compileTransforms'
+import { imageTransform, formatParameter } from './imageTransform'
 
 
 export default function cloudinary(urlOptions, defaultTransformations) {
@@ -10,10 +10,10 @@ export default function cloudinary(urlOptions, defaultTransformations) {
     let options
 
     if (Array.isArray(transforms)) {
-      options = transforms.map(compileTransforms).join('/')
+      options = transforms.map(imageTransform).join('/')
     } else {
-      options = compileTransforms({...defaultTransformations, ...transforms})
-      extension = compileFormat(transforms.format)
+      options = imageTransform({...defaultTransformations, ...transforms})
+      extension = formatParameter(transforms.format)
     }
 
     return base + (options.length ? (options + '/') : '') + publicId + extension
