@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Image Transform Parameter aspectRatio throws when invalid 1`] = `"Cloudinary Image :: aspectRatio should be a number or have the form x:y, received: 'bad' - see http://cloudinary.com/documentation/image_transformation_reference#aspectRatio_parameter"`;
+
+exports[`Image Transform Parameter aspectRatio throws when invalid 2`] = `"Cloudinary Image :: aspectRatio should be a number or have the form x:y, received: '7:' - see http://cloudinary.com/documentation/image_transformation_reference#aspectRatio_parameter"`;
+
+exports[`Image Transform Parameter crop throws when invalid 1`] = `"Cloudinary Image :: crop should be one of ['scale', 'fit', 'limit', 'mfit', 'fill', 'lfill', 'pad', 'mpad', 'crop', 'thumb', 'imagga_crop', 'imagga_scale'], received: 'bad' - see http://cloudinary.com/documentation/image_transformation_reference#crop_parameter"`;
+
+exports[`Image Transform Parameter crop throws when invalid 2`] = `"Cloudinary Image :: crop should be one of ['scale', 'fit', 'limit', 'mfit', 'fill', 'lfill', 'pad', 'mpad', 'crop', 'thumb', 'imagga_crop', 'imagga_scale'], received: 300 - see http://cloudinary.com/documentation/image_transformation_reference#crop_parameter"`;
+
+exports[`Image Transform Parameter fetchFormat throws when invalid 1`] = `"Cloudinary Image :: format should be one of ['jpg', 'jpe', 'jpeg', 'jpc', 'jp2', 'j2k', 'wdp', 'jxr', 'hdp', 'png', 'gif', 'webp', 'bmp', 'tif', 'tiff', 'ico', 'pdf', 'ps', 'ept', 'eps', 'eps3', 'psd', 'svg', 'ai', 'djvu', 'flif'], received: 'bad' - see http://cloudinary.com/documentation/image_transformation_reference#format_parameter"`;
+
+exports[`Image Transform Parameter format throws on an invalid extension 1`] = `"Cloudinary Image :: format should be one of ['jpg', 'jpe', 'jpeg', 'jpc', 'jp2', 'j2k', 'wdp', 'jxr', 'hdp', 'png', 'gif', 'webp', 'bmp', 'tif', 'tiff', 'ico', 'pdf', 'ps', 'ept', 'eps', 'eps3', 'psd', 'svg', 'ai', 'djvu', 'flif'], received: 'bad' - see http://cloudinary.com/documentation/image_transformation_reference#format_parameter"`;
+
+exports[`Image Transform Parameter gravity throws when invalid 1`] = `"Cloudinary Image :: gravity should be one of ['north_west', 'north', 'north_east', 'west', 'center', 'east', 'south_west', 'south', 'south_east', 'xy_center', 'face', 'face:center', 'face:auto', 'faces', 'faces:center', 'faces:auto', 'body', 'body:face', 'ocr_text', 'adv_face', 'adv_faces', 'adv_eyes', 'custom', 'custom:face', 'custom:faces', 'custom:adv_face', 'custom:adv_faces'], 'auto', or a string starting with 'auto:', received: 'bad:auto' - see http://cloudinary.com/documentation/image_transformation_reference#gravity_parameter"`;
+
+exports[`Image Transform Parameter gravity throws when invalid 2`] = `"Cloudinary Image :: gravity should be one of ['north_west', 'north', 'north_east', 'west', 'center', 'east', 'south_west', 'south', 'south_east', 'xy_center', 'face', 'face:center', 'face:auto', 'faces', 'faces:center', 'faces:auto', 'body', 'body:face', 'ocr_text', 'adv_face', 'adv_faces', 'adv_eyes', 'custom', 'custom:face', 'custom:faces', 'custom:adv_face', 'custom:adv_faces'], 'auto', or a string starting with 'auto:', received: 'auto-bad' - see http://cloudinary.com/documentation/image_transformation_reference#gravity_parameter"`;
+
+exports[`Image Transform Parameter height throws when invalid 1`] = `"Cloudinary Image :: height should be a number, received: 'bad' - see http://cloudinary.com/documentation/image_transformation_reference#height_parameter"`;
+
+exports[`Image Transform Parameter quality throws when invalid 1`] = `"value.match is not a function"`;
+
+exports[`Image Transform Parameter quality throws when invalid 2`] = `"value.match is not a function"`;
+
+exports[`Image Transform Parameter quality throws when invalid 3`] = `"Cloudinary Image :: quality should be one of ['jpg', 'jpe', 'jpeg', 'jpc', 'jp2', 'j2k', 'wdp', 'jxr', 'hdp', 'png', 'gif', 'webp', 'bmp', 'tif', 'tiff', 'ico', 'pdf', 'ps', 'ept', 'eps', 'eps3', 'psd', 'svg', 'ai', 'djvu', 'flif'], a number between 1 and 100, or have the form x:y, received: '105' - see http://cloudinary.com/documentation/image_transformation_reference#quality_parameter"`;
+
+exports[`Image Transform Parameter quality throws when invalid 4`] = `"Cloudinary Image :: quality should be one of ['jpg', 'jpe', 'jpeg', 'jpc', 'jp2', 'j2k', 'wdp', 'jxr', 'hdp', 'png', 'gif', 'webp', 'bmp', 'tif', 'tiff', 'ico', 'pdf', 'ps', 'ept', 'eps', 'eps3', 'psd', 'svg', 'ai', 'djvu', 'flif'], a number between 1 and 100, or have the form x:y, received: 'bad' - see http://cloudinary.com/documentation/image_transformation_reference#quality_parameter"`;
+
+exports[`Image Transform Parameter quality throws when invalid 5`] = `"Cloudinary Image :: quality should be one of ['jpg', 'jpe', 'jpeg', 'jpc', 'jp2', 'j2k', 'wdp', 'jxr', 'hdp', 'png', 'gif', 'webp', 'bmp', 'tif', 'tiff', 'ico', 'pdf', 'ps', 'ept', 'eps', 'eps3', 'psd', 'svg', 'ai', 'djvu', 'flif'], a number between 1 and 100, or have the form x:y, received: 'auto:bad' - see http://cloudinary.com/documentation/image_transformation_reference#quality_parameter"`;
+
+exports[`Image Transform Parameter radius throws when invalid 1`] = `"Cloudinary Image :: radius should be a number, 'max' or have the form x[:y[:z[:u]]], received: 'bad' - see http://cloudinary.com/documentation/image_transformation_reference#radius_parameter"`;
+
+exports[`Image Transform Parameter radius throws when invalid 2`] = `"Cloudinary Image :: radius should be a number, 'max' or have the form x[:y[:z[:u]]], received: '20:0:40:40:90' - see http://cloudinary.com/documentation/image_transformation_reference#radius_parameter"`;
+
+exports[`Image Transform Parameter width throws when invalid 1`] = `"Cloudinary Image :: width should be a number, 'auto', or a string starting with 'auto:', received: 'bad:auto' - see http://cloudinary.com/documentation/image_transformation_reference#width_parameter"`;
+
+exports[`Image Transform Parameter width throws when invalid 2`] = `"Cloudinary Image :: width should be a number, 'auto', or a string starting with 'auto:', received: 'auto-bad' - see http://cloudinary.com/documentation/image_transformation_reference#width_parameter"`;
+
+exports[`Image Transform Parameter x throws when invalid 1`] = `"Cloudinary Image :: x should be a number, received: 'bad' - see http://cloudinary.com/documentation/image_transformation_reference#x_parameter"`;
+
+exports[`Image Transform Parameter y throws when invalid 1`] = `"Cloudinary Image :: y should be a number, received: 'bad' - see http://cloudinary.com/documentation/image_transformation_reference#y_parameter"`;
+
+exports[`Image Transform Parameter zoom throws when invalid 1`] = `"Cloudinary Image :: zoom should be a number, received: 'bad' - see http://cloudinary.com/documentation/image_transformation_reference#zoom_parameter"`;
