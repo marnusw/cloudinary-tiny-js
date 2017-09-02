@@ -259,7 +259,6 @@ describe('Image Transform Parameter', () => {
       expect(compileParameter('background', 'auto:border_contrast')).toBe('b_auto:border_contrast')
     })
     it('throws when invalid', () => {
-      expect(() => compileParameter('background', 78)).toThrowErrorMatchingSnapshot()
       expect(() => compileParameter('background', 'auto:bad')).toThrowErrorMatchingSnapshot()
       expect(() => compileParameter('background', '#3020f')).toThrowErrorMatchingSnapshot()
     })
@@ -310,7 +309,6 @@ describe('Image Transform Parameter', () => {
       })).toBe('l_text:Arial_12_left_letter_spacing_2_line_spacing_1.5:Bananas')
     })
     it('throws when invalid', () => {
-      expect(() => compileParameter('overlay', 78)).toThrowErrorMatchingSnapshot()
       expect(() => compileParameter('overlay', {text: 'No fontFamily', fontSize: 12})).toThrowErrorMatchingSnapshot()
       expect(() => compileParameter('overlay', {
         text: 'No fontSize',
@@ -364,7 +362,6 @@ describe('Image Transform Parameter', () => {
       })).toBe('u_text:Arial_12_left_letter_spacing_2_line_spacing_1.5:Bananas')
     })
     it('throws when invalid', () => {
-      expect(() => compileParameter('underlay', 78)).toThrowErrorMatchingSnapshot()
       expect(() => compileParameter('underlay', {text: 'No fontFamily', fontSize: 12})).toThrowErrorMatchingSnapshot()
       expect(() => compileParameter('underlay', {
         text: 'No fontSize',

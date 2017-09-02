@@ -6,27 +6,25 @@ exports[`Image Transform Parameter aspectRatio throws when invalid 1`] = `"Cloud
 
 exports[`Image Transform Parameter aspectRatio throws when invalid 2`] = `"Cloudinary Image :: aspectRatio should be a number or have the form x:y, received: '7:' - see http://cloudinary.com/documentation/image_transformation_reference#aspectRatio_parameter"`;
 
-exports[`Image Transform Parameter background throws when invalid 1`] = `"Cloudinary Image :: background should be one of ['auto:border', 'auto:predominant', 'auto:border_contrast', 'auto:predominant_contrast'] or a color, received: 78 - see http://cloudinary.com/documentation/image_transformation_reference#background_parameter"`;
+exports[`Image Transform Parameter background throws when invalid 1`] = `"Cloudinary Image :: background should be one of ['auto:border', 'auto:predominant', 'auto:border_contrast', 'auto:predominant_contrast'] or a color, received: 'auto:bad' - see http://cloudinary.com/documentation/image_transformation_reference#background_parameter"`;
 
-exports[`Image Transform Parameter background throws when invalid 2`] = `"Cloudinary Image :: background should be one of ['auto:border', 'auto:predominant', 'auto:border_contrast', 'auto:predominant_contrast'] or a color, received: 'auto:bad' - see http://cloudinary.com/documentation/image_transformation_reference#background_parameter"`;
-
-exports[`Image Transform Parameter background throws when invalid 3`] = `"Cloudinary Image :: background should be one of ['auto:border', 'auto:predominant', 'auto:border_contrast', 'auto:predominant_contrast'] or a color, received: '#3020f' - see http://cloudinary.com/documentation/image_transformation_reference#background_parameter"`;
+exports[`Image Transform Parameter background throws when invalid 2`] = `"Cloudinary Image :: background should be one of ['auto:border', 'auto:predominant', 'auto:border_contrast', 'auto:predominant_contrast'] or a color, received: 'rgb:3020f' - see http://cloudinary.com/documentation/image_transformation_reference#background_parameter"`;
 
 exports[`Image Transform Parameter border throws when invalid 1`] = `"Cloudinary Image :: border should be an object with 'width' & 'color' or a string of the form 'width_style_color', received: 'bad' - see http://cloudinary.com/documentation/image_transformation_reference#border_parameter"`;
 
 exports[`Image Transform Parameter border throws when invalid 2`] = `"Cloudinary Image :: border should contain a 'color' property when provided as an object, received: '{\\"width\\":1}' - see http://cloudinary.com/documentation/image_transformation_reference#border_parameter"`;
 
-exports[`Image Transform Parameter border throws when invalid 3`] = `"Cloudinary Image :: border should be an object with 'width' & 'color' or a string of the form 'width_style_color', received: '1px_solid_#3020f' - see http://cloudinary.com/documentation/image_transformation_reference#border_parameter"`;
+exports[`Image Transform Parameter border throws when invalid 3`] = `"Cloudinary Image :: border should be an object with 'width' & 'color' or a string of the form 'width_style_color', received: '1px_solid_rgb:3020f' - see http://cloudinary.com/documentation/image_transformation_reference#border_parameter"`;
 
-exports[`Image Transform Parameter border throws when invalid 4`] = `"Cloudinary Image :: border should be an object with 'width' & 'color' or a string of the form 'width_style_color', received: '1px_solid_#3020ff2' - see http://cloudinary.com/documentation/image_transformation_reference#border_parameter"`;
+exports[`Image Transform Parameter border throws when invalid 4`] = `"Cloudinary Image :: border should be an object with 'width' & 'color' or a string of the form 'width_style_color', received: '1px_solid_rgb:3020ff2' - see http://cloudinary.com/documentation/image_transformation_reference#border_parameter"`;
 
-exports[`Image Transform Parameter color throws when invalid 1`] = `"Cloudinary Image :: color must be a named color, short #rgb[a] or long #rrggbb[aa] hex value, received: '#30' - see http://cloudinary.com/documentation/image_transformation_reference#color_parameter"`;
+exports[`Image Transform Parameter color throws when invalid 1`] = `"Cloudinary Image :: color must be a named color, short #rgb[a] or long #rrggbb[aa] hex value, received: 'rgb:30' - see http://cloudinary.com/documentation/image_transformation_reference#color_parameter"`;
 
-exports[`Image Transform Parameter color throws when invalid 2`] = `"Cloudinary Image :: color must be a named color, short #rgb[a] or long #rrggbb[aa] hex value, received: '#3020f' - see http://cloudinary.com/documentation/image_transformation_reference#color_parameter"`;
+exports[`Image Transform Parameter color throws when invalid 2`] = `"Cloudinary Image :: color must be a named color, short #rgb[a] or long #rrggbb[aa] hex value, received: 'rgb:3020f' - see http://cloudinary.com/documentation/image_transformation_reference#color_parameter"`;
 
-exports[`Image Transform Parameter color throws when invalid 3`] = `"Cloudinary Image :: color must be a named color, short #rgb[a] or long #rrggbb[aa] hex value, received: '#3020ff2' - see http://cloudinary.com/documentation/image_transformation_reference#color_parameter"`;
+exports[`Image Transform Parameter color throws when invalid 3`] = `"Cloudinary Image :: color must be a named color, short #rgb[a] or long #rrggbb[aa] hex value, received: 'rgb:3020ff2' - see http://cloudinary.com/documentation/image_transformation_reference#color_parameter"`;
 
-exports[`Image Transform Parameter color throws when invalid 4`] = `"Cloudinary Image :: color must be a named color, short #rgb[a] or long #rrggbb[aa] hex value, received: '#3020ff2ff' - see http://cloudinary.com/documentation/image_transformation_reference#color_parameter"`;
+exports[`Image Transform Parameter color throws when invalid 4`] = `"Cloudinary Image :: color must be a named color, short #rgb[a] or long #rrggbb[aa] hex value, received: 'rgb:3020ff2ff' - see http://cloudinary.com/documentation/image_transformation_reference#color_parameter"`;
 
 exports[`Image Transform Parameter colorSpace throws when invalid 1`] = `"Cloudinary Image :: colorSpace should be one of ['srgb', 'tinysrgb', 'no_cmyk'] or 'icc:(public_id)', received: 'bad' - see http://cloudinary.com/documentation/image_transformation_reference#colorSpace_parameter"`;
 
@@ -84,11 +82,9 @@ exports[`Image Transform Parameter opacity throws when invalid 2`] = `"Cloudinar
 
 exports[`Image Transform Parameter opacity throws when invalid 3`] = `"Cloudinary Image :: opacity should be a number between 0 and 100, received: 'bad' - see http://cloudinary.com/documentation/image_transformation_reference#opacity_parameter"`;
 
-exports[`Image Transform Parameter overlay throws when invalid 1`] = `"Cloudinary Image :: text caption required options are 'fontFamily' and 'fontSize', received: '78' - see http://cloudinary.com/documentation/image_transformations#adding_text_captions"`;
+exports[`Image Transform Parameter overlay throws when invalid 1`] = `"Cloudinary Image :: text caption required options are 'fontFamily' and 'fontSize', received: '{\\"text\\":\\"No fontFamily\\",\\"fontSize\\":12}' - see http://cloudinary.com/documentation/image_transformations#adding_text_captions"`;
 
-exports[`Image Transform Parameter overlay throws when invalid 2`] = `"Cloudinary Image :: text caption required options are 'fontFamily' and 'fontSize', received: '{\\"text\\":\\"No fontFamily\\",\\"fontSize\\":12}' - see http://cloudinary.com/documentation/image_transformations#adding_text_captions"`;
-
-exports[`Image Transform Parameter overlay throws when invalid 3`] = `"Cloudinary Image :: text caption required options are 'fontFamily' and 'fontSize', received: '{\\"text\\":\\"No fontSize\\",\\"fontFamily\\":\\"Arial\\"}' - see http://cloudinary.com/documentation/image_transformations#adding_text_captions"`;
+exports[`Image Transform Parameter overlay throws when invalid 2`] = `"Cloudinary Image :: text caption required options are 'fontFamily' and 'fontSize', received: '{\\"text\\":\\"No fontSize\\",\\"fontFamily\\":\\"Arial\\"}' - see http://cloudinary.com/documentation/image_transformations#adding_text_captions"`;
 
 exports[`Image Transform Parameter page throws when invalid 1`] = `"Cloudinary Image :: page should be an integer greater than 0, received: 'bad' - see http://cloudinary.com/documentation/image_transformation_reference#page_parameter"`;
 
@@ -110,11 +106,9 @@ exports[`Image Transform Parameter radius throws when invalid 1`] = `"Cloudinary
 
 exports[`Image Transform Parameter radius throws when invalid 2`] = `"Cloudinary Image :: radius should be a number, 'max' or have the form x[:y[:z[:u]]], received: '20:0:40:40:90' - see http://cloudinary.com/documentation/image_transformation_reference#radius_parameter"`;
 
-exports[`Image Transform Parameter underlay throws when invalid 1`] = `"Cloudinary Image :: text caption required options are 'fontFamily' and 'fontSize', received: '78' - see http://cloudinary.com/documentation/image_transformations#adding_text_captions"`;
+exports[`Image Transform Parameter underlay throws when invalid 1`] = `"Cloudinary Image :: text caption required options are 'fontFamily' and 'fontSize', received: '{\\"text\\":\\"No fontFamily\\",\\"fontSize\\":12}' - see http://cloudinary.com/documentation/image_transformations#adding_text_captions"`;
 
-exports[`Image Transform Parameter underlay throws when invalid 2`] = `"Cloudinary Image :: text caption required options are 'fontFamily' and 'fontSize', received: '{\\"text\\":\\"No fontFamily\\",\\"fontSize\\":12}' - see http://cloudinary.com/documentation/image_transformations#adding_text_captions"`;
-
-exports[`Image Transform Parameter underlay throws when invalid 3`] = `"Cloudinary Image :: text caption required options are 'fontFamily' and 'fontSize', received: '{\\"text\\":\\"No fontSize\\",\\"fontFamily\\":\\"Arial\\"}' - see http://cloudinary.com/documentation/image_transformations#adding_text_captions"`;
+exports[`Image Transform Parameter underlay throws when invalid 2`] = `"Cloudinary Image :: text caption required options are 'fontFamily' and 'fontSize', received: '{\\"text\\":\\"No fontSize\\",\\"fontFamily\\":\\"Arial\\"}' - see http://cloudinary.com/documentation/image_transformations#adding_text_captions"`;
 
 exports[`Image Transform Parameter width throws when invalid 1`] = `"Cloudinary Image :: width should be a number, 'auto', or a string starting with 'auto:', received: 'bad:auto' - see http://cloudinary.com/documentation/image_transformation_reference#width_parameter"`;
 
