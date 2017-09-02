@@ -22,6 +22,17 @@ const gravityOptions = [
 // http://cloudinary.com/documentation/image_transformation_reference#quality_parameter
 const qualityOptions = ['auto', 'auto:best', 'auto:good', 'auto:eco', 'auto:low', 'jpegmini']
 
+// http://cloudinary.com/documentation/image_transformation_reference#angle_parameter
+const angleOptions = ['auto_right', 'auto_left', 'ignore', 'vflip', 'hflip']
+
+// http://cloudinary.com/documentation/image_transformation_reference#background_parameter
+const backgroundOptions = ['auto:border', 'auto:predominant', 'auto:border_contrast', 'auto:predominant_contrast']
+
+// http://cloudinary.com/documentation/image_transformation_reference#color_parameter
+// A color name or rgb: followed by an rgb[a] or rrggbb[aa] hex value
+const colorRegex = /^(?:[a-z]+$|rgb:(?:[0-9a-f]{3,4}$|[0-9a-f]{6}$|[0-9a-f]{8}$))/i
+const colorRegexStr = colorRegex.toString().replace(/[/^i]/g, '')
+
 
 export const imageTransform = (parameters) => (
   Object.keys(parameters)
@@ -107,7 +118,7 @@ export function compileParameter(parameter, value) {
     case 'quality':
       process.env.NODE_ENV !== 'production' && invariant(
         (isNumber(value) && 1 <= +value && +value <= 100)
-        || value.match(/^\d+:\d+$/)
+        || (typeof value === 'string' && value.match(/^\d+:\d+$/))
         || includes(value, qualityOptions),
         'quality', value, `${shouldBeOneOf(formatOptions)}, a number between 1 and 100, or have the form x:y`,
       )
@@ -125,16 +136,10 @@ export function compileParameter(parameter, value) {
     ////////////////////////////////////
 
     case 'angle':
-      if (process.env.NODE_ENV !== 'production') {
-        const angleOptions = ['auto_right', 'auto_left', 'ignore', 'vflip', 'hflip']
-        if (
-          (typeof value === 'number' && (value < 1 || value > 100))
-          && !angleOptions.includes(value)
-          && !value.match(/^\d+:\d+$/)
-        ) {
-          throw new Error('Cloudinary :: quality should be a number between 1 and 100, an \'auto\' options or have the form x:y, received: ' + value)
-        }
-      }
+      process.env.NODE_ENV !== 'production' && invariant(
+        isNumber(value) || includes(value, angleOptions),
+        'angle', value, `${shouldBeOneOf(angleOptions)} or a number`,
+      )
       return 'a_' + value
 
     ////////////////////////////////////
@@ -145,39 +150,40 @@ export function compileParameter(parameter, value) {
     ////////////////////////////////////
 
     case 'opacity':
-      if (process.env.NODE_ENV !== 'production') {
-        if (typeof value !== 'number' || value < 1 || value > 100) {
-          throw new Error('Cloudinary :: opacity should be a number between 0 and 100, received: ' + value)
-        }
-      }
+      process.env.NODE_ENV !== 'production' && invariant(
+        isNumber(value) && 0 <= +value && +value <= 100,
+        'opacity', value, 'should be a number between 0 and 100',
+      )
       return 'o_' + value
 
     ////////////////////////////////////
 
     case 'border':
       if (typeof value === 'object') {
-        if (typeof value.width !== 'string' || !value.width.endsWith('px')) {
-          value.width = value.width + 'px'
+        process.env.NODE_ENV !== 'production' && invariant(
+          'color' in value,
+          'border', JSON.stringify(value), `should contain a 'color' property when provided as an object`,
+        )
+        if (typeof value.width !== 'string' || value.width.substr(value.width.length - 2, 2) !== 'px') {
+          value.width = (value.width || 1) + 'px'
         }
         value = value.width + '_solid_' + value.color
       }
-      if (process.env.NODE_ENV !== 'production') {
-        if (value.match(/^\d+px_solid_[a-z0-9:]+$/)) {
-          throw new Error('Cloudinary :: border should be an object with width & color or a string `width_solid_color`, received: ' + value)
-        }
-      }
-      return 'bo_' + value
+      process.env.NODE_ENV !== 'production' && invariant(
+        value.replace('#', 'rgb:').match(new RegExp(`^\\d+px_solid_${colorRegexStr}$`, 'i')),
+        'border', value, `should be an object with 'width' & 'color' or a string of the form 'width_style_color'`,
+      )
+      return 'bo_' + value.toLowerCase().replace('#', 'rgb:')
 
     ////////////////////////////////////
 
     case 'background':
-      if (process.env.NODE_ENV !== 'production') {
-        const backgroundOptions = ['auto:border', 'auto:predominant', 'auto:border_contrast', 'auto:predominant_contrast']
-        if (value.startsWith('auto:') && !backgroundOptions.includes(value)) {
-          throw new Error(`Cloudinary :: background should be a color or one of ['${backgroundOptions.join('\', \'')}'], received: ${value}`)
-        }
-      }
-      return 'b_' + value
+      process.env.NODE_ENV !== 'production' && invariant(
+        typeof value === 'string'
+        && (includes(value, backgroundOptions) || value.replace('#', 'rgb:').match(colorRegex)),
+        'background', value, `${shouldBeOneOf(backgroundOptions)} or a color`,
+      )
+      return 'b_' + value.replace('#', 'rgb:')
 
     ////////////////////////////////////
 

@@ -1,8 +1,24 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Image Transform Parameter angle throws when invalid 1`] = `"Cloudinary Image :: angle should be one of ['auto_right', 'auto_left', 'ignore', 'vflip', 'hflip'] or a number, received: 'bad' - see http://cloudinary.com/documentation/image_transformation_reference#angle_parameter"`;
+
 exports[`Image Transform Parameter aspectRatio throws when invalid 1`] = `"Cloudinary Image :: aspectRatio should be a number or have the form x:y, received: 'bad' - see http://cloudinary.com/documentation/image_transformation_reference#aspectRatio_parameter"`;
 
 exports[`Image Transform Parameter aspectRatio throws when invalid 2`] = `"Cloudinary Image :: aspectRatio should be a number or have the form x:y, received: '7:' - see http://cloudinary.com/documentation/image_transformation_reference#aspectRatio_parameter"`;
+
+exports[`Image Transform Parameter background throws when invalid 1`] = `"Cloudinary Image :: background should be one of ['auto:border', 'auto:predominant', 'auto:border_contrast', 'auto:predominant_contrast'] or a color, received: 78 - see http://cloudinary.com/documentation/image_transformation_reference#background_parameter"`;
+
+exports[`Image Transform Parameter background throws when invalid 2`] = `"Cloudinary Image :: background should be one of ['auto:border', 'auto:predominant', 'auto:border_contrast', 'auto:predominant_contrast'] or a color, received: 'auto:bad' - see http://cloudinary.com/documentation/image_transformation_reference#background_parameter"`;
+
+exports[`Image Transform Parameter background throws when invalid 3`] = `"Cloudinary Image :: background should be one of ['auto:border', 'auto:predominant', 'auto:border_contrast', 'auto:predominant_contrast'] or a color, received: '#3020f' - see http://cloudinary.com/documentation/image_transformation_reference#background_parameter"`;
+
+exports[`Image Transform Parameter border throws when invalid 1`] = `"Cloudinary Image :: border should be an object with 'width' & 'color' or a string of the form 'width_style_color', received: 'bad' - see http://cloudinary.com/documentation/image_transformation_reference#border_parameter"`;
+
+exports[`Image Transform Parameter border throws when invalid 2`] = `"Cloudinary Image :: border should contain a 'color' property when provided as an object, received: '{\\"width\\":1}' - see http://cloudinary.com/documentation/image_transformation_reference#border_parameter"`;
+
+exports[`Image Transform Parameter border throws when invalid 3`] = `"Cloudinary Image :: border should be an object with 'width' & 'color' or a string of the form 'width_style_color', received: '1px_solid_#3020f' - see http://cloudinary.com/documentation/image_transformation_reference#border_parameter"`;
+
+exports[`Image Transform Parameter border throws when invalid 4`] = `"Cloudinary Image :: border should be an object with 'width' & 'color' or a string of the form 'width_style_color', received: '1px_solid_#3020ff2' - see http://cloudinary.com/documentation/image_transformation_reference#border_parameter"`;
 
 exports[`Image Transform Parameter crop throws when invalid 1`] = `"Cloudinary Image :: crop should be one of ['scale', 'fit', 'limit', 'mfit', 'fill', 'lfill', 'pad', 'mpad', 'crop', 'thumb', 'imagga_crop', 'imagga_scale'], received: 'bad' - see http://cloudinary.com/documentation/image_transformation_reference#crop_parameter"`;
 
@@ -18,9 +34,15 @@ exports[`Image Transform Parameter gravity throws when invalid 2`] = `"Cloudinar
 
 exports[`Image Transform Parameter height throws when invalid 1`] = `"Cloudinary Image :: height should be a number, received: 'bad' - see http://cloudinary.com/documentation/image_transformation_reference#height_parameter"`;
 
-exports[`Image Transform Parameter quality throws when invalid 1`] = `"value.match is not a function"`;
+exports[`Image Transform Parameter opacity throws when invalid 1`] = `"Cloudinary Image :: opacity should be a number between 0 and 100, received: -1 - see http://cloudinary.com/documentation/image_transformation_reference#opacity_parameter"`;
 
-exports[`Image Transform Parameter quality throws when invalid 2`] = `"value.match is not a function"`;
+exports[`Image Transform Parameter opacity throws when invalid 2`] = `"Cloudinary Image :: opacity should be a number between 0 and 100, received: 101 - see http://cloudinary.com/documentation/image_transformation_reference#opacity_parameter"`;
+
+exports[`Image Transform Parameter opacity throws when invalid 3`] = `"Cloudinary Image :: opacity should be a number between 0 and 100, received: 'bad' - see http://cloudinary.com/documentation/image_transformation_reference#opacity_parameter"`;
+
+exports[`Image Transform Parameter quality throws when invalid 1`] = `"Cloudinary Image :: quality should be one of ['jpg', 'jpe', 'jpeg', 'jpc', 'jp2', 'j2k', 'wdp', 'jxr', 'hdp', 'png', 'gif', 'webp', 'bmp', 'tif', 'tiff', 'ico', 'pdf', 'ps', 'ept', 'eps', 'eps3', 'psd', 'svg', 'ai', 'djvu', 'flif'], a number between 1 and 100, or have the form x:y, received: 0 - see http://cloudinary.com/documentation/image_transformation_reference#quality_parameter"`;
+
+exports[`Image Transform Parameter quality throws when invalid 2`] = `"Cloudinary Image :: quality should be one of ['jpg', 'jpe', 'jpeg', 'jpc', 'jp2', 'j2k', 'wdp', 'jxr', 'hdp', 'png', 'gif', 'webp', 'bmp', 'tif', 'tiff', 'ico', 'pdf', 'ps', 'ept', 'eps', 'eps3', 'psd', 'svg', 'ai', 'djvu', 'flif'], a number between 1 and 100, or have the form x:y, received: 105 - see http://cloudinary.com/documentation/image_transformation_reference#quality_parameter"`;
 
 exports[`Image Transform Parameter quality throws when invalid 3`] = `"Cloudinary Image :: quality should be one of ['jpg', 'jpe', 'jpeg', 'jpc', 'jp2', 'j2k', 'wdp', 'jxr', 'hdp', 'png', 'gif', 'webp', 'bmp', 'tif', 'tiff', 'ico', 'pdf', 'ps', 'ept', 'eps', 'eps3', 'psd', 'svg', 'ai', 'djvu', 'flif'], a number between 1 and 100, or have the form x:y, received: '105' - see http://cloudinary.com/documentation/image_transformation_reference#quality_parameter"`;
 

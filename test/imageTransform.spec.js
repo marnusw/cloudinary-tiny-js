@@ -86,6 +86,42 @@ describe('Image Transform Parameter', () => {
     })
   })
 
+  describe('zoom', () => {
+    it('accepts a number', () => {
+      expect(compileParameter('zoom', 30)).toBe('z_30')
+    })
+    it('accepts a numeric string', () => {
+      expect(compileParameter('zoom', '30')).toBe('z_30')
+    })
+    it('throws when invalid', () => {
+      expect(() => compileParameter('zoom', 'bad')).toThrowErrorMatchingSnapshot()
+    })
+  })
+
+  describe('x', () => {
+    it('accepts a number', () => {
+      expect(compileParameter('x', 100)).toBe('x_100')
+    })
+    it('accepts a numeric string', () => {
+      expect(compileParameter('x', '100')).toBe('x_100')
+    })
+    it('throws when invalid', () => {
+      expect(() => compileParameter('x', 'bad')).toThrowErrorMatchingSnapshot()
+    })
+  })
+
+  describe('y', () => {
+    it('accepts a number', () => {
+      expect(compileParameter('y', 100)).toBe('y_100')
+    })
+    it('accepts a numeric string', () => {
+      expect(compileParameter('y', '100')).toBe('y_100')
+    })
+    it('throws when invalid', () => {
+      expect(() => compileParameter('y', 'bad')).toThrowErrorMatchingSnapshot()
+    })
+  })
+
   describe('fetchFormat', () => {
     it('accepts valid file formats', () => {
       expect(compileParameter('fetchFormat', 'jpg')).toBe('f_jpg')
@@ -143,39 +179,89 @@ describe('Image Transform Parameter', () => {
     })
   })
 
-  describe('zoom', () => {
+  describe('angle', () => {
     it('accepts a number', () => {
-      expect(compileParameter('zoom', 30)).toBe('z_30')
+      expect(compileParameter('angle', 90)).toBe('a_90')
+      expect(compileParameter('angle', -20)).toBe('a_-20')
     })
     it('accepts a numeric string', () => {
-      expect(compileParameter('zoom', '30')).toBe('z_30')
+      expect(compileParameter('angle', '10')).toBe('a_10')
+      expect(compileParameter('angle', '-20')).toBe('a_-20')
+    })
+    it('accepts valid modes', () => {
+      expect(compileParameter('angle', 'auto_right')).toBe('a_auto_right')
+      expect(compileParameter('angle', 'vflip')).toBe('a_vflip')
     })
     it('throws when invalid', () => {
-      expect(() => compileParameter('zoom', 'bad')).toThrowErrorMatchingSnapshot()
+      expect(() => compileParameter('angle', 'bad')).toThrowErrorMatchingSnapshot()
     })
   })
 
-  describe('x', () => {
-    it('accepts a number', () => {
-      expect(compileParameter('x', 100)).toBe('x_100')
-    })
-    it('accepts a numeric string', () => {
-      expect(compileParameter('x', '100')).toBe('x_100')
-    })
-    it('throws when invalid', () => {
-      expect(() => compileParameter('x', 'bad')).toThrowErrorMatchingSnapshot()
+  describe('effect', () => {
+    it('accepts any value', () => {
+      expect(compileParameter('effect', 'hue:40')).toBe('e_hue:40')
+      expect(compileParameter('effect', 'negate')).toBe('e_negate')
     })
   })
 
-  describe('y', () => {
-    it('accepts a number', () => {
-      expect(compileParameter('y', 100)).toBe('y_100')
+  describe('opacity', () => {
+    it('accepts a number between 0 and 100', () => {
+      expect(compileParameter('opacity', 0)).toBe('o_0')
+      expect(compileParameter('opacity', 30)).toBe('o_30')
+      expect(compileParameter('opacity', 100)).toBe('o_100')
     })
     it('accepts a numeric string', () => {
-      expect(compileParameter('y', '100')).toBe('y_100')
+      expect(compileParameter('opacity', '0')).toBe('o_0')
+      expect(compileParameter('opacity', '30')).toBe('o_30')
+      expect(compileParameter('opacity', '100')).toBe('o_100')
     })
     it('throws when invalid', () => {
-      expect(() => compileParameter('y', 'bad')).toThrowErrorMatchingSnapshot()
+      expect(() => compileParameter('opacity', -1)).toThrowErrorMatchingSnapshot()
+      expect(() => compileParameter('opacity', 101)).toThrowErrorMatchingSnapshot()
+      expect(() => compileParameter('opacity', 'bad')).toThrowErrorMatchingSnapshot()
+    })
+  })
+
+  describe('border', () => {
+    it('accepts a fully formed width_style_color string', () => {
+      expect(compileParameter('border', '4px_solid_black')).toBe('bo_4px_solid_black')
+      expect(compileParameter('border', '4px_solid_#2040fa')).toBe('bo_4px_solid_rgb:2040fa')
+      expect(compileParameter('border', '4px_solid_rgb:2040fa')).toBe('bo_4px_solid_rgb:2040fa')
+      expect(compileParameter('border', '4px_solid_rgb:2040faf0')).toBe('bo_4px_solid_rgb:2040faf0')
+    })
+    it('accepts a object with color and optional width', () => {
+      expect(compileParameter('border', {color: 'red'})).toBe('bo_1px_solid_red')
+      expect(compileParameter('border', {color: '#3020ff'})).toBe('bo_1px_solid_rgb:3020ff')
+      expect(compileParameter('border', {color: '#3020ff22'})).toBe('bo_1px_solid_rgb:3020ff22')
+      expect(compileParameter('border', {color: 'rgb:3020ff'})).toBe('bo_1px_solid_rgb:3020ff')
+      expect(compileParameter('border', {color: 'rgb:3020ff22'})).toBe('bo_1px_solid_rgb:3020ff22')
+      expect(compileParameter('border', {color: 'red', width: 3})).toBe('bo_3px_solid_red')
+      expect(compileParameter('border', {color: '#3020ff', width: '2px'})).toBe('bo_2px_solid_rgb:3020ff')
+    })
+    it('throws when invalid', () => {
+      expect(() => compileParameter('border', 'bad')).toThrowErrorMatchingSnapshot()
+      expect(() => compileParameter('border', {width: 1})).toThrowErrorMatchingSnapshot()
+      expect(() => compileParameter('border', {color: '#3020f'})).toThrowErrorMatchingSnapshot()
+      expect(() => compileParameter('border', {color: '#3020ff2'})).toThrowErrorMatchingSnapshot()
+    })
+  })
+
+  describe('background', () => {
+    it('accepts a color', () => {
+      expect(compileParameter('background', 'blue')).toBe('b_blue')
+      expect(compileParameter('background', '#3020ff')).toBe('b_rgb:3020ff')
+      expect(compileParameter('background', '#3020ff22')).toBe('b_rgb:3020ff22')
+      expect(compileParameter('background', 'rgb:3020ff')).toBe('b_rgb:3020ff')
+      expect(compileParameter('background', 'rgb:3020ff22')).toBe('b_rgb:3020ff22')
+    })
+    it('accepts valid `auto:mode` strings', () => {
+      expect(compileParameter('background', 'auto:border')).toBe('b_auto:border')
+      expect(compileParameter('background', 'auto:border_contrast')).toBe('b_auto:border_contrast')
+    })
+    it('throws when invalid', () => {
+      expect(() => compileParameter('background', 78)).toThrowErrorMatchingSnapshot()
+      expect(() => compileParameter('background', 'auto:bad')).toThrowErrorMatchingSnapshot()
+      expect(() => compileParameter('background', '#3020f')).toThrowErrorMatchingSnapshot()
     })
   })
 })
