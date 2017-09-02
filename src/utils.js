@@ -1,4 +1,4 @@
-export const invariant = (
+const invariantFor = type => (
   condition, parameter, value, message,
   source = `/image_transformation_reference#${parameter}_parameter`
 ) => {
@@ -6,10 +6,14 @@ export const invariant = (
     value = typeof value === 'string' ? `'${value}'` : value
     source = `http://cloudinary.com/documentation${source}`
     throw new Error(
-      `Cloudinary Image :: ${parameter} ${message}, received: ${value} - see ${source}`
+      `Cloudinary ${type} :: ${parameter} ${message}, received: ${value} - see ${source}`
     )
   }
 }
+
+export const invariantImage = invariantFor('Image')
+export const invariantVideo = invariantFor('Video')
+export const invariantSocial = invariantFor('Social')
 
 export const isNumber = (value) => typeof value === 'number' || !Number.isNaN(Number(value))
 

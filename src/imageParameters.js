@@ -1,4 +1,4 @@
-import { invariant, isNumber, startsWith, includes, shouldBeOneOf } from './utils'
+import { invariantImage as invariant, isNumber, startsWith, includes, shouldBeOneOf } from './utils'
 
 // http://cloudinary.com/documentation/image_transformation_reference#format_parameter
 const formatOptions = [
@@ -194,9 +194,12 @@ const urlParameters = {
   flags: 'fl_',
 }
 
-
-export function compileParameter(parameter, value) {
+export default function compileImageParameter(parameter, value) {
   switch (parameter) {
+    case 'flags':
+      value = (Array.isArray(value) ? value.join('.') : value)
+      break
+
     case 'overlay':
     case 'underlay':
       if (typeof value === 'object') {
@@ -215,10 +218,6 @@ export function compileParameter(parameter, value) {
         }
         value = `text:${stringStyle}:${encodeURIComponent(value.text)}`
       }
-      break
-
-    case 'flags':
-      value = (Array.isArray(value) ? value.join('.') : value)
       break
 
     case 'border':
@@ -249,19 +248,4 @@ export function compileParameter(parameter, value) {
   }
 
   return urlParameters[parameter] + value
-}
-
-
-export const imageTransform = (parameters) => (
-  Object.keys(parameters)
-    .map(param => compileParameter(param, parameters[param]))
-    .join(',')
-)
-
-export const formatParameter = (value) => {
-  process.env.NODE_ENV !== 'production' && invariant(
-    !value || includes(value, formatOptions),
-    'format', value, shouldBeOneOf(formatOptions),
-  )
-  return value ? `.${value}` : ''
 }

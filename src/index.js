@@ -1,21 +1,15 @@
-import baseUrl from './baseUrl'
-import { imageTransform, formatParameter } from './imageTransform'
+import configureUrlBuilder from './urlBuilder'
+import socialUrlBuilder from './socialUrlBuilder'
+import fetchUrlBuilder from './fetchUrlBuilder'
+import imageParameters from './imageParameters'
+import videoParameters from './videoParameters'
 
+export default function Cloudinary(options, defaultTransforms) {
+  const urlBuilder = configureUrlBuilder(options)
+  const imageUrlBuilder = urlBuilder('image', imageParameters, defaultTransforms.image)
 
-export default function cloudinary(urlOptions, defaultTransformations) {
-  const base = baseUrl(urlOptions)
-
-  return (publicId, transforms) => {
-    let extension = ''
-    let options
-
-    if (Array.isArray(transforms)) {
-      options = transforms.map(imageTransform).join('/')
-    } else {
-      options = imageTransform({...defaultTransformations, ...transforms})
-      extension = formatParameter(transforms.format)
-    }
-
-    return base + (options.length ? (options + '/') : '') + publicId + extension
-  }
+  this.video = urlBuilder('video', videoParameters, defaultTransforms.video)('upload')
+  this.image = imageUrlBuilder('upload')
+  this.fetch = fetchUrlBuilder(imageUrlBuilder)
+  this.social = socialUrlBuilder(imageUrlBuilder)
 }
