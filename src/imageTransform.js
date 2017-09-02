@@ -33,6 +33,16 @@ const backgroundOptions = ['auto:border', 'auto:predominant', 'auto:border_contr
 const colorRegex = /^(?:[a-z]+$|rgb:(?:[0-9a-f]{3,4}$|[0-9a-f]{6}$|[0-9a-f]{8}$))/i
 const colorRegexStr = colorRegex.toString().replace(/[/^i]/g, '')
 
+// http://cloudinary.com/documentation/image_transformation_reference#color_space_parameter
+const colorSpaceOptions = ['srgb', 'tinysrgb', 'no_cmyk']
+
+const flagOptions = [
+  'any_format', 'attachment', 'apng', 'awebp', 'clip', 'clip_evenodd', 'cutter', 'force_strip', 'ignore_aspect_ratio',
+  'immutable_cache', 'keep_attribution', 'keep_iptc', 'layer_apply', 'lossy', 'no_overflow', 'preserve_transparency',
+  'png8', 'png24', 'png32', 'progressive', 'progressive:semi', 'progressive:steep', 'progressive:none', 'rasterize',
+  'region_relative', 'relative', 'strip_profile', 'text_no_trim', 'tiff8_lwz', 'tiled',
+]
+
 
 export const imageTransform = (parameters) => (
   Object.keys(parameters)
@@ -188,125 +198,131 @@ export function compileParameter(parameter, value) {
     ////////////////////////////////////
 
     case 'overlay':
-      return 'l_' + (typeof value === 'string'
-          ? value
-          : `text:${value.publicId || compileStringStyle(value)}:${encodeURIComponent(value.text)}`
-      )
+      return 'l_' + compileOverlay(value)
 
     ////////////////////////////////////
 
     case 'underlay':
-      return 'u_' + value
+      return 'u_' + compileOverlay(value)
 
     ////////////////////////////////////
 
     case 'defaultImage':
-      if (process.env.NODE_ENV !== 'production') {
-        if (value.match(/^[\w+-]+\.[\w]{3,4}$/)) {
-          throw new Error('Cloudinary :: defaultImage must include a file extension, received: ' + value)
-        }
-      }
+      process.env.NODE_ENV !== 'production' && invariant(
+        value.match(/^[\w+-]+\.[\w]{3,4}$/) && includes(value.substr(value.indexOf('.') + 1), formatOptions),
+        'defaultImage', value, `must include a file extension which ${shouldBeOneOf(formatOptions)}`,
+      )
       return 'd_' + value
 
     ////////////////////////////////////
 
     case 'delay':
-      if (process.env.NODE_ENV !== 'production') {
-        if (typeof value !== 'number' || value < 1) {
-          throw new Error('Cloudinary :: delay should be an integer larger than 0, received: ' + value)
-        }
-      }
+      process.env.NODE_ENV !== 'production' && invariant(
+        isNumber(value) && value >= 0,
+        'delay', value, `must be a positive number`,
+      )
       return 'dl_' + value
 
     ////////////////////////////////////
 
     case 'color':
-      return 'co_' + value
+      process.env.NODE_ENV !== 'production' && invariant(
+        value.replace('#', 'rgb:').match(colorRegex),
+        'color', value, `must be a named color, short #rgb[a] or long #rrggbb[aa] hex value`,
+      )
+      return 'co_' + value.replace('#', 'rgb:')
 
     ////////////////////////////////////
 
     case 'colorSpace':
-      if (process.env.NODE_ENV !== 'production') {
-        const colorSpaceOptions = ['srgb', 'tinysrgb', 'no_cmyk']
-        if (!colorSpaceOptions.includes(value) && !value.match(/^cs_icc:[\w+-]+\.[\w]{3,4}$/)) {
-          throw new Error(`Cloudinary :: colorSpace received ${value}, should be 'cs_icc:(public_id)' or one of ['${colorSpaceOptions.join('\', \'')}']`)
-        }
-      }
+      process.env.NODE_ENV !== 'production' && invariant(
+        includes(value, colorSpaceOptions) || value.match(/^icc:[\w+-]+\.[\w]{3,4}$/),
+        'colorSpace', value, `${shouldBeOneOf(colorSpaceOptions)} or 'icc:(public_id)'`,
+      )
       return 'cs_' + value
 
     ////////////////////////////////////
 
     case 'dpr':
-      if (process.env.NODE_ENV !== 'production') {
-        if (value !== 'auto' && typeof value !== 'number' && value <= 0) {
-          throw new Error('Cloudinary :: dpr should be `auto` or number larger than 0, received: ' + value)
-        }
-      }
+      process.env.NODE_ENV !== 'production' && invariant(
+        value === 'auto' || (isNumber(value) && value > 0),
+        'dpr', value, 'should be `auto` or a number greater than 0',
+      )
       return 'dpr_' + value
 
     ////////////////////////////////////
 
     case 'page':
-      if (process.env.NODE_ENV !== 'production') {
-        if (typeof value !== 'number' || value < 1) {
-          throw new Error('Cloudinary :: page should be an integer larger than 0, received: ' + value)
-        }
-      }
+      process.env.NODE_ENV !== 'production' && invariant(
+        isNumber(value) && value > 0,
+        'page', value, 'should be an integer greater than 0',
+      )
       return 'pg_' + value
 
     ////////////////////////////////////
 
     case 'density':
-      if (process.env.NODE_ENV !== 'production') {
-        if (typeof value !== 'number' || value < 50 || value > 300) {
-          throw new Error('Cloudinary :: density should be an integer between 50 and 300, received: ' + value)
-        }
-      }
+      process.env.NODE_ENV !== 'production' && invariant(
+        isNumber(value) && 0 < value && value <= 300,
+        'density', value, 'should be a number greater than 0 up to 300',
+      )
       return 'dn_' + value
 
     ////////////////////////////////////
 
     case 'flags':
-      return 'fl_' + value
+      process.env.NODE_ENV !== 'production' && invariant(
+        (Array.isArray(value) ? value : value.split('.')
+          .every(flag => includes(flag, flagOptions))),
+        'flags', JSON.stringify(value), `${shouldBeOneOf(flagOptions)}, an array of options or '.' separated options`,
+      )
+      return 'fl_' + (Array.isArray(value) ? value.join('.') : value)
 
     ////////////////////////////////////
 
     default:
       if (process.env.NODE_ENV !== 'production') {
-        throw new Error(`Cloudinary Image :: unknown transform parameter provided: ${parameter}`)
+        throw new Error(`Cloudinary Image :: unknown transform parameter provided: '${parameter}'`)
       }
   }
 }
 
+// http://cloudinary.com/documentation/image_transformation_reference#overlay_parameter
+function compileOverlay(value) {
+  return typeof value === 'string' ? value : (
+    `text:${value.publicId || compileStringStyle(value)}:${encodeURIComponent(value.text)}`
+  )
+}
+
 // http://cloudinary.com/documentation/image_transformations#adding_text_captions
-function compileStringStyle(string) {
+function compileStringStyle(textOptions) {
   const {
     fontFamily, fontSize, fontWeight, fontStyle, textDecoration,
     textAlign, stroke, letterSpacing, lineSpacing
-  } = string
+  } = textOptions
 
   if (process.env.NODE_ENV !== 'production') {
     invariant(
-      string, fontFamily && fontSize && typeof fontSize === 'number',
-      '', 'text overlay style requires a fontFamily and fontSize',
+      fontFamily && fontSize && isNumber(fontSize),
+      'text caption', JSON.stringify(textOptions), `required options are 'fontFamily' and 'fontSize'`,
       '/image_transformations#adding_text_captions',
     )
-    if (
-      (fontWeight && !['normal', 'bold'].includes(fontWeight)) ||
-      (fontStyle && !['normal', 'italic'].includes(fontStyle)) ||
-      (textDecoration && !['normal', 'underline', 'strikethrough'].includes(textDecoration)) ||
-      (textAlign && !['left', 'center', 'right', 'start', 'end', 'justify'].includes(textAlign)) ||
-      (stroke && !['normal', 'stroke'].includes(stroke)) ||
-      (letterSpacing && typeof letterSpacing !== 'number') ||
-      (lineSpacing && typeof lineSpacing !== 'number')
-    ) {
-      throw new Error(`Cloudinary :: invalid text overlay style options, received: ${string} - see http://cloudinary.com/documentation/image_transformations#adding_text_captions`)
-    }
+    invariant(
+      (!fontWeight || includes(fontWeight, ['normal', 'bold'])) &&
+      (!fontStyle || includes(fontStyle, ['normal', 'italic'])) &&
+      (!textDecoration || includes(textDecoration, ['none', 'underline', 'strikethrough'])) &&
+      (!textAlign || includes(textAlign, ['left', 'center', 'right', 'start', 'end', 'justify'])) &&
+      (!stroke || includes(stroke, ['none', 'stroke'])) &&
+      (!letterSpacing || isNumber(letterSpacing)) &&
+      (!lineSpacing || isNumber(lineSpacing)),
+      'text caption', JSON.stringify(textOptions), `options are invalid`,
+      '/image_transformations#adding_text_captions',
+    )
   }
 
   return [
-    fontFamily, fontSize, fontWeight, fontStyle, textDecoration, textAlign, stroke,
+    encodeURIComponent(fontFamily), fontSize, fontWeight, fontStyle, textDecoration, textAlign, stroke,
     letterSpacing ? `letter_spacing_${letterSpacing}` : null,
     lineSpacing ? `line_spacing_${lineSpacing}` : null,
-  ].filter(o => o).join('_')
+  ].filter(option => option && option !== 'normal' && option !== 'none').join('_')
 }

@@ -264,6 +264,249 @@ describe('Image Transform Parameter', () => {
       expect(() => compileParameter('background', '#3020f')).toThrowErrorMatchingSnapshot()
     })
   })
+
+  describe('overlay', () => {
+    it('accepts any string as public id', () => {
+      expect(compileParameter('overlay', 'badge')).toBe('l_badge')
+      expect(compileParameter('overlay', 'red_button.jpg')).toBe('l_red_button.jpg')
+      expect(compileParameter('overlay', 'text:Arial_50:Smile!')).toBe('l_text:Arial_50:Smile!')
+      expect(compileParameter('overlay', 'text:default_style:Hello+World')).toBe('l_text:default_style:Hello+World')
+    })
+    it('accepts an object with `text` and a `publicId`', () => {
+      expect(compileParameter('overlay', {
+        text: 'Hello World',
+        publicId: 'default_style'
+      })).toBe('l_text:default_style:Hello%20World')
+    })
+    it('accepts an object with `text` and text caption options', () => {
+      expect(compileParameter('overlay', {
+        text: 'Hello World',
+        fontFamily: 'Times New Roman',
+        fontSize: '16',
+      })).toBe('l_text:Times%20New%20Roman_16:Hello%20World')
+      expect(compileParameter('overlay', {
+        text: 'Flowers',
+        fontFamily: 'verdana',
+        fontSize: 18,
+        fontWeight: 'bold',
+        fontStyle: 'italic',
+        textDecoration: 'underline',
+        textAlign: 'center',
+        stroke: 'stroke',
+        letterSpacing: 4,
+        lineSpacing: 3.3,
+      })).toBe('l_text:verdana_18_bold_italic_underline_center_stroke_letter_spacing_4_line_spacing_3.3:Flowers')
+      expect(compileParameter('overlay', {
+        text: 'Bananas',
+        fontFamily: 'Arial',
+        fontSize: 12,
+        fontWeight: 'normal',
+        fontStyle: 'normal',
+        textDecoration: 'none',
+        textAlign: 'left',
+        stroke: 'none',
+        letterSpacing: 2,
+        lineSpacing: 1.5,
+      })).toBe('l_text:Arial_12_left_letter_spacing_2_line_spacing_1.5:Bananas')
+    })
+    it('throws when invalid', () => {
+      expect(() => compileParameter('overlay', 78)).toThrowErrorMatchingSnapshot()
+      expect(() => compileParameter('overlay', {text: 'No fontFamily', fontSize: 12})).toThrowErrorMatchingSnapshot()
+      expect(() => compileParameter('overlay', {
+        text: 'No fontSize',
+        fontFamily: 'Arial'
+      })).toThrowErrorMatchingSnapshot()
+    })
+  })
+
+  describe('underlay', () => {
+    it('accepts any string as public id', () => {
+      expect(compileParameter('underlay', 'badge')).toBe('u_badge')
+      expect(compileParameter('underlay', 'red_button.jpg')).toBe('u_red_button.jpg')
+      expect(compileParameter('underlay', 'text:Arial_50:Smile!')).toBe('u_text:Arial_50:Smile!')
+      expect(compileParameter('underlay', 'text:default_style:Hello+World')).toBe('u_text:default_style:Hello+World')
+    })
+    it('accepts an object with `text` and a `publicId`', () => {
+      expect(compileParameter('underlay', {
+        text: 'Hello World',
+        publicId: 'default_style'
+      })).toBe('u_text:default_style:Hello%20World')
+    })
+    it('accepts an object with `text` and text caption options', () => {
+      expect(compileParameter('underlay', {
+        text: 'Hello World',
+        fontFamily: 'Times New Roman',
+        fontSize: '16',
+      })).toBe('u_text:Times%20New%20Roman_16:Hello%20World')
+      expect(compileParameter('underlay', {
+        text: 'Flowers',
+        fontFamily: 'verdana',
+        fontSize: 18,
+        fontWeight: 'bold',
+        fontStyle: 'italic',
+        textDecoration: 'underline',
+        textAlign: 'center',
+        stroke: 'stroke',
+        letterSpacing: 4,
+        lineSpacing: 3.3,
+      })).toBe('u_text:verdana_18_bold_italic_underline_center_stroke_letter_spacing_4_line_spacing_3.3:Flowers')
+      expect(compileParameter('underlay', {
+        text: 'Bananas',
+        fontFamily: 'Arial',
+        fontSize: 12,
+        fontWeight: 'normal',
+        fontStyle: 'normal',
+        textDecoration: 'none',
+        textAlign: 'left',
+        stroke: 'none',
+        letterSpacing: 2,
+        lineSpacing: 1.5,
+      })).toBe('u_text:Arial_12_left_letter_spacing_2_line_spacing_1.5:Bananas')
+    })
+    it('throws when invalid', () => {
+      expect(() => compileParameter('underlay', 78)).toThrowErrorMatchingSnapshot()
+      expect(() => compileParameter('underlay', {text: 'No fontFamily', fontSize: 12})).toThrowErrorMatchingSnapshot()
+      expect(() => compileParameter('underlay', {
+        text: 'No fontSize',
+        fontFamily: 'Arial'
+      })).toThrowErrorMatchingSnapshot()
+    })
+  })
+
+  describe('defaultImage', () => {
+    it('accepts any public id with a file extension', () => {
+      expect(compileParameter('defaultImage', 'image_1.jpg')).toBe('d_image_1.jpg')
+      expect(compileParameter('defaultImage', 'image+a-char.png')).toBe('d_image+a-char.png')
+    })
+    it('throws when invalid', () => {
+      expect(() => compileParameter('defaultImage', 'noExtension')).toThrowErrorMatchingSnapshot()
+      expect(() => compileParameter('defaultImage', 'badExtension.abc')).toThrowErrorMatchingSnapshot()
+    })
+  })
+
+  describe('delay', () => {
+    it('accepts a positive number', () => {
+      expect(compileParameter('delay', 30)).toBe('dl_30')
+    })
+    it('accepts a numeric string', () => {
+      expect(compileParameter('delay', '30')).toBe('dl_30')
+    })
+    it('throws when invalid', () => {
+      expect(() => compileParameter('delay', 'bad')).toThrowErrorMatchingSnapshot()
+      expect(() => compileParameter('delay', '-10')).toThrowErrorMatchingSnapshot()
+      expect(() => compileParameter('delay', -10)).toThrowErrorMatchingSnapshot()
+    })
+  })
+
+  describe('color', () => {
+    it('accepts a color string', () => {
+      expect(compileParameter('color', 'green')).toBe('co_green')
+      expect(compileParameter('color', '#204')).toBe('co_rgb:204')
+      expect(compileParameter('color', '#204f')).toBe('co_rgb:204f')
+      expect(compileParameter('color', '#2040fa')).toBe('co_rgb:2040fa')
+      expect(compileParameter('color', 'rgb:2040fa')).toBe('co_rgb:2040fa')
+      expect(compileParameter('color', 'rgb:2040faf0')).toBe('co_rgb:2040faf0')
+    })
+    it('throws when invalid', () => {
+      expect(() => compileParameter('color', '#30')).toThrowErrorMatchingSnapshot()
+      expect(() => compileParameter('color', '#3020f')).toThrowErrorMatchingSnapshot()
+      expect(() => compileParameter('color', '#3020ff2')).toThrowErrorMatchingSnapshot()
+      expect(() => compileParameter('color', '#3020ff2ff')).toThrowErrorMatchingSnapshot()
+    })
+  })
+
+  describe('colorSpace', () => {
+    it('accepts predefined values', () => {
+      expect(compileParameter('colorSpace', 'srgb')).toBe('cs_srgb')
+      expect(compileParameter('colorSpace', 'tinysrgb')).toBe('cs_tinysrgb')
+      expect(compileParameter('colorSpace', 'no_cmyk')).toBe('cs_no_cmyk')
+    })
+    it('accepts `cs_icc:(public_id)` values', () => {
+      expect(compileParameter('colorSpace', 'icc:some_id.icc')).toBe('cs_icc:some_id.icc')
+    })
+    it('throws when invalid', () => {
+      expect(() => compileParameter('colorSpace', 'bad')).toThrowErrorMatchingSnapshot()
+      expect(() => compileParameter('colorSpace', 'bad:some_id')).toThrowErrorMatchingSnapshot()
+      expect(() => compileParameter('colorSpace', 'cs_icc:no_extension')).toThrowErrorMatchingSnapshot()
+    })
+  })
+
+  describe('dpr', () => {
+    it('accepts a positive number', () => {
+      expect(compileParameter('dpr', 3)).toBe('dpr_3')
+    })
+    it('accepts a numeric string', () => {
+      expect(compileParameter('dpr', '2.0')).toBe('dpr_2.0')
+    })
+    it('accepts the value `auto`', () => {
+      expect(compileParameter('dpr', 'auto')).toBe('dpr_auto')
+    })
+    it('throws when invalid', () => {
+      expect(() => compileParameter('dpr', 'bad')).toThrowErrorMatchingSnapshot()
+      expect(() => compileParameter('dpr', -1)).toThrowErrorMatchingSnapshot()
+      expect(() => compileParameter('dpr', 0)).toThrowErrorMatchingSnapshot()
+    })
+  })
+
+  describe('page', () => {
+    it('accepts a positive number', () => {
+      expect(compileParameter('page', 3)).toBe('pg_3')
+    })
+    it('accepts a numeric string', () => {
+      expect(compileParameter('page', '20')).toBe('pg_20')
+    })
+    it('throws when invalid', () => {
+      expect(() => compileParameter('page', 'bad')).toThrowErrorMatchingSnapshot()
+      expect(() => compileParameter('page', -1)).toThrowErrorMatchingSnapshot()
+      expect(() => compileParameter('page', 0)).toThrowErrorMatchingSnapshot()
+    })
+  })
+
+  describe('density', () => {
+    it('accepts a positive number up to 300', () => {
+      expect(compileParameter('density', 10)).toBe('dn_10')
+      expect(compileParameter('density', 300)).toBe('dn_300')
+    })
+    it('accepts a numeric string', () => {
+      expect(compileParameter('density', '20')).toBe('dn_20')
+    })
+    it('throws when invalid', () => {
+      expect(() => compileParameter('density', 'bad')).toThrowErrorMatchingSnapshot()
+      expect(() => compileParameter('density', 301)).toThrowErrorMatchingSnapshot()
+      expect(() => compileParameter('density', -1)).toThrowErrorMatchingSnapshot()
+      expect(() => compileParameter('density', 0)).toThrowErrorMatchingSnapshot()
+    })
+  })
+
+  describe('flags', () => {
+    it('accepts a valid value', () => {
+      expect(compileParameter('flags', 'any_format')).toBe('fl_any_format')
+      expect(compileParameter('flags', 'attachment')).toBe('fl_attachment')
+    })
+    it('accepts an array of valid values', () => {
+      expect(compileParameter('flags', ['clip_evenodd', 'cutter', 'force_strip'])).toBe('fl_clip_evenodd.cutter.force_strip')
+    })
+    it('accepts a string of `.` separated values', () => {
+      expect(compileParameter('flags', 'layer_apply.lossy.no_overflow')).toBe('fl_layer_apply.lossy.no_overflow')
+    })
+    it('throws when invalid', () => {
+      expect(() => compileParameter('density', 'bad')).toThrowErrorMatchingSnapshot()
+      expect(() => compileParameter('density', ['any_format', 'bad'])).toThrowErrorMatchingSnapshot()
+      expect(() => compileParameter('density', 'attachment.bad')).toThrowErrorMatchingSnapshot()
+    })
+  })
+
+  describe('invalid parameters', () => {
+    it('throws an error', () => {
+      try {
+        compileParameter('abc', 'def')
+      } catch (error) {
+        expect(error.message).toBe(`Cloudinary Image :: unknown transform parameter provided: 'abc'`)
+        return
+      }
+      throw new Error('compileParameter should have thrown')
+    })
+  })
 })
 
 describe('Image Transforms', () => {
