@@ -1,23 +1,25 @@
-const makeBaseUrl = ({
+export const makeBaseUrl = ({
   cloudName,
   secure = true,
   subDomain = 'res',
   hostName = `${subDomain}.cloudinary.com`,
-}, resourceType, type) => `http${secure ? 's' : ''}://${hostName}/${cloudName}/${resourceType}/${type}`
+}, resourceType, type) => `http${secure ? 's' : ''}://${hostName}/${cloudName}/${resourceType}/${type}/`
 
 
-const compiler = (compileParameter, defaultTransform) => {
+export const compiler = (compileParameter, defaultTransform) => {
   const compile = parameters => (
     Object.keys(parameters)
       .map(param => compileParameter(param, parameters[param]))
       .join(',')
   )
 
-  return (transform) => !transform ? '' : (
-    '/' + Array.isArray(transform)
-      ? transform.map(compile).join('/')
-      : compile({...defaultTransform, ...transform})
-  )
+  return (transform) => transform ? (
+    (
+      Array.isArray(transform)
+        ? transform.map(compile).join('/')
+        : compile({...defaultTransform, ...transform})
+    ) + '/'
+  ) : ''
 }
 
 
