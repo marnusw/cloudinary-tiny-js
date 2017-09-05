@@ -249,3 +249,5 @@ export default function compileImageParameter(parameter, value) {
 
   return urlParameters[parameter] + value
 }
+
+compileImageParameter.resourceType = 'image'

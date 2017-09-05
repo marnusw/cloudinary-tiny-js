@@ -3,7 +3,8 @@ const makeBaseUrl = ({
   secure = true,
   subDomain = 'res',
   hostName = `${subDomain}.cloudinary.com`,
-}, resourceType) => `http${secure ? 's' : ''}://${hostName}/${cloudName}/${resourceType}/`
+}, resourceType, type) => `http${secure ? 's' : ''}://${hostName}/${cloudName}/${resourceType}/${type}`
+
 
 const compiler = (compileParameter, defaultTransform) => {
   const compile = parameters => (
@@ -19,11 +20,15 @@ const compiler = (compileParameter, defaultTransform) => {
   )
 }
 
-export default (options) => (resourceType, compileParameter, defaultTransform) => {
-  const baseUrl = makeBaseUrl(options, resourceType)
-  const compile = compiler(compileParameter, defaultTransform)
 
-  return type => (publicId, transform) => (
-    `${baseUrl}/${type}${compile(transform)}/${publicId}`
-  )
+export default (options) => (
+  compileParameter,
+  defaultTransform,
+  resourceType = compileParameter.resourceType,
+) => {
+  const compile = compiler(compileParameter, defaultTransform)
+  return type => {
+    const baseUrl = makeBaseUrl(options, resourceType, type)
+    return (publicId, transform) => `${baseUrl}${compile(transform)}/${publicId}`
+  }
 }
