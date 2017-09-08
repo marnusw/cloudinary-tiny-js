@@ -32,9 +32,9 @@ exports[`Image Transform Parameters colorSpace throws when invalid 2`] = `"Cloud
 
 exports[`Image Transform Parameters colorSpace throws when invalid 3`] = `"Cloudinary Image :: colorSpace should be one of ['srgb', 'tinysrgb', 'no_cmyk'] or 'icc:(public_id)', received: 'cs_icc:no_extension' - see http://cloudinary.com/documentation/image_transformation_reference#colorSpace_parameter"`;
 
-exports[`Image Transform Parameters crop throws when invalid 1`] = `"Cloudinary Image :: crop should be one of ['scale', 'fit', 'limit', 'mfit', 'fill', 'lfill', 'pad', 'mpad', 'crop', 'thumb', 'imagga_crop', 'imagga_scale'], received: 'bad' - see http://cloudinary.com/documentation/image_transformation_reference#crop_parameter"`;
+exports[`Image Transform Parameters crop throws when invalid 1`] = `"Cloudinary Image :: crop should be one of ['scale', 'fit', 'limit', 'mfit', 'fill', 'lfill', 'pad', 'lpad', 'mpad', 'crop', 'thumb', 'imagga_crop', 'imagga_scale'], received: 'bad' - see http://cloudinary.com/documentation/image_transformation_reference#crop_parameter"`;
 
-exports[`Image Transform Parameters crop throws when invalid 2`] = `"Cloudinary Image :: crop should be one of ['scale', 'fit', 'limit', 'mfit', 'fill', 'lfill', 'pad', 'mpad', 'crop', 'thumb', 'imagga_crop', 'imagga_scale'], received: 300 - see http://cloudinary.com/documentation/image_transformation_reference#crop_parameter"`;
+exports[`Image Transform Parameters crop throws when invalid 2`] = `"Cloudinary Image :: crop should be one of ['scale', 'fit', 'limit', 'mfit', 'fill', 'lfill', 'pad', 'lpad', 'mpad', 'crop', 'thumb', 'imagga_crop', 'imagga_scale'], received: 300 - see http://cloudinary.com/documentation/image_transformation_reference#crop_parameter"`;
 
 exports[`Image Transform Parameters defaultImage throws when invalid 1`] = `"Cloudinary Image :: defaultImage must include a file extension which should be one of ['jpg', 'jpe', 'jpeg', 'jpc', 'jp2', 'j2k', 'wdp', 'jxr', 'hdp', 'png', 'gif', 'webp', 'bmp', 'tif', 'tiff', 'ico', 'pdf', 'ps', 'ept', 'eps', 'eps3', 'psd', 'svg', 'ai', 'djvu', 'flif'], received: 'noExtension' - see http://cloudinary.com/documentation/image_transformation_reference#defaultImage_parameter"`;
 

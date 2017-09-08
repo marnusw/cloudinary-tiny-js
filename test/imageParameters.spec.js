@@ -481,7 +481,13 @@ describe('Image Transform Parameters', () => {
     })
   })
 
-  describe('invalid parameters', () => {
+  describe('null value on any parameter', () => {
+    it('returns an empty string', () => {
+      expect(imageParameter('crop', null)).toBe('')
+    })
+  })
+
+  describe('invalid parameter', () => {
     it('throws an error', () => {
       try {
         imageParameter('abc', 'def')

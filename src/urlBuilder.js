@@ -31,6 +31,6 @@ export default (options) => (
   const compile = compiler(compileParameter, defaultTransform)
   return type => {
     const baseUrl = makeBaseUrl(options, resourceType, type)
-    return (publicId, transform) => `${baseUrl}${compile(transform)}/${publicId}`
+    return (publicId, transform) => baseUrl + compile(transform) + publicId
   }
 }

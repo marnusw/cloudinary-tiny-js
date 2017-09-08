@@ -8,7 +8,8 @@ const formatOptions = [
 
 // http://cloudinary.com/documentation/image_transformation_reference#crop_parameter
 const cropOptions = [
-  'scale', 'fit', 'limit', 'mfit', 'fill', 'lfill', 'pad', 'mpad', 'crop', 'thumb', 'imagga_crop', 'imagga_scale'
+  'scale', 'fit', 'limit', 'mfit', 'fill', 'lfill', 'pad', 'lpad',
+  'mpad', 'crop', 'thumb', 'imagga_crop', 'imagga_scale'
 ]
 
 // http://cloudinary.com/documentation/image_transformation_reference#gravity_parameter
@@ -195,6 +196,10 @@ const urlParameters = {
 }
 
 export default function compileImageParameter(parameter, value) {
+  if (value === null) {
+    return ''
+  }
+
   switch (parameter) {
     case 'flags':
       value = (Array.isArray(value) ? value.join('.') : value)
