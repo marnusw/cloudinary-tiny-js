@@ -4,17 +4,16 @@ const invariantFor = type => (
 ) => {
   if (!condition) {
     value = typeof value === 'string' ? `'${value}'` : value
-    source = `http://cloudinary.com/documentation${source}`
+    source = source ? `http://cloudinary.com/documentation${source}` : null
     throw new Error(
-      `Cloudinary ${type} :: ${parameter} ${message}, received: ${value} - see ${source}`
+      `Cloudinary ${type}:: ${parameter} ${message}, received: ${value}${source ? ` - see ${source}` : ''}`
     )
   }
 }
 
-export const invariantConfig = invariantFor('Config')
-export const invariantImage = invariantFor('Image')
-export const invariantVideo = invariantFor('Video')
-export const invariantSocial = invariantFor('Social')
+export const invariant = invariantFor('')
+export const invariantImage = invariantFor('Image ')
+export const invariantVideo = invariantFor('Video ')
 
 export const isNumber = (value) => typeof value === 'number' || !Number.isNaN(Number(value))
 

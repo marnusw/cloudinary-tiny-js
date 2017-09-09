@@ -1,43 +1,37 @@
-import urlBuilder, { makeBaseUrl, compiler } from '../src/urlBuilder'
+import urlBuilder, { compile } from '../src/urlBuilder'
 import imageParameters from '../src/parameters/image'
 
 describe('urlBuilder', () => {
-  describe('makeBaseUrl', () => {
-    it('creates a secure Cloudinary URL with just a cloudName', () => {
-      expect(makeBaseUrl({cloudName: 'demo'}, 'image', 'upload'))
-        .toBe('https://res.cloudinary.com/demo/image/upload/')
+  describe('compile', () => {
+    it('returns an empty string for no parameterSet', () => {
+      expect(compile()).toBe('')
     })
 
-    it('handles advanced options', () => {
-      expect(makeBaseUrl({
-        cloudName: 'demo1',
-        subDomain: 'test',
-      }, 'video', 'upload')).toBe('https://test.cloudinary.com/demo1/video/upload/')
-      expect(makeBaseUrl({
-        cloudName: 'demo2',
-        hostName: 'test.example.net',
-        secure: false,
-      }, 'image', 'fetch')).toBe('http://test.example.net/demo2/image/fetch/')
+    it('returns an empty string for no- or an empty transform without defaults', () => {
+      expect(compile(imageParameters)).toBe('')
+      expect(compile(imageParameters, {})).toBe('')
     })
-  })
 
-  describe('compiler', () => {
-    it('creates a transform compiler given a parameter compiler', () => {
-      const compile = compiler(imageParameters)
-      expect(compile).toBeInstanceOf(Function)
-      expect(compile).toHaveLength(1)
+    it('returns the default transform for no- or an empty transform', () => {
+      const defaultTransform = {width: 220, crop: 'fill'}
+      expect(compile(imageParameters, undefined, defaultTransform)).toBe('')
+      expect(compile(imageParameters, {}, defaultTransform)).toBe('')
     })
+
     it('compiles a single transform with one or more parameters', () => {
-      const compile = compiler(imageParameters)
-      expect(compile({width: 220, height: 140, crop: 'fill'})).toBe('w_220,h_140,c_fill/')
+      const compiledTransform = compile(imageParameters, {width: 220, height: 140, crop: 'fill'})
+      expect(compiledTransform).toBe('/w_220,h_140,c_fill')
     })
+
     it('compiles a single transform, applying and overriding default parameters', () => {
-      const compile = compiler(imageParameters, {width: 'auto', height: 100, crop: 'fill'})
-      expect(compile({height: 140, radius: 30})).toBe('w_auto,h_140,c_fill,r_30/')
+      const compiledTransform = compile(
+        imageParameters, {height: 140, radius: 30}, {width: 'auto', height: 100, crop: 'fill'}
+      )
+      expect(compiledTransform).toBe('/w_auto,h_140,c_fill,r_30')
     })
+
     it('compiles an array of transforms without applying defaults', () => {
-      const compile = compiler(imageParameters, {width: 'auto', height: 100, crop: 'fill'})
-      expect(compile([
+      const compiledTransform = compile(imageParameters, [
         {width: 220, height: 140, crop: 'fill'},
         {overlay: 'brown_sheep', width: 220, height: 140, x: 220, crop: 'fill'},
         {overlay: 'horses', width: 220, height: 140, y: 140, x: -110, crop: 'fill'},
@@ -48,28 +42,81 @@ describe('urlBuilder', () => {
           y: 155
         },
         {effect: 'shadow'}
-      ])).toBe('w_220,h_140,c_fill/l_brown_sheep,w_220,h_140,x_220,c_fill/l_horses,w_220,h_140,y_140,x_-110,c_fill/w_400,h_260,r_20,c_crop/l_text:Parisienne_35_bold:Memories%20from%20our%20trip,co_rgb:990C47,y_155/e_shadow/')
+      ], {width: 'auto', height: 100, crop: 'fill'})
+      expect(compiledTransform).toBe(
+        '/w_220,h_140,c_fill' +
+        '/l_brown_sheep,w_220,h_140,x_220,c_fill' +
+        '/l_horses,w_220,h_140,y_140,x_-110,c_fill' +
+        '/w_400,h_260,r_20,c_crop' +
+        '/l_text:Parisienne_35_bold:Memories%20from%20our%20trip,co_rgb:990C47,y_155' +
+        '/e_shadow'
+      )
     })
   })
 
   describe('urlBuilder', () => {
-    let imageUrl
+    it('creates a configurable url builder without transforms', () => {
+      const cl = urlBuilder()({cloudName: 'demo'})
+      expect(cl('something')).toBe('https://res.cloudinary.com/demo/image/upload/v1/something')
+      expect(cl('something', {type: 'fetch'})).toBe('https://res.cloudinary.com/demo/image/fetch/v1/something')
+      expect(cl('something', {resourceType: 'video'})).toBe('https://res.cloudinary.com/demo/video/upload/v1/something')
+    })
 
-    it('creates a url builder from compiler, defaults and a resource type', () => {
-      const options = {cloudName: 'demo'}
-      const imageUrlBuilder = urlBuilder(options)(imageParameters, {width: 'auto', height: 100, crop: 'fill'})
-      expect(imageUrlBuilder).toBeInstanceOf(Function)
-      imageUrl = imageUrlBuilder('upload')
-      expect(imageUrl).toBeInstanceOf(Function)
+    it('throws if cloudName is not specified', () => {
+      expect(() => urlBuilder()({})).toThrowError(/^Cloudinary :: cloudName configuration is required/)
+    })
+
+    it('throws on transforms with unsupported parameters', () => {
+      const cl = urlBuilder({image: imageParameters})({cloudName: 'demo'})
+      const badResourceType = () => cl('bad', {resourceType: 'video', width: 300})
+      expect(badResourceType).toThrowError(/^Cloudinary :: resourceType should be one of/)
+    })
+
+    it('throws on an invalid type option', () => {
+      const cl = urlBuilder()({cloudName: 'demo'})
+      const badResourceType = () => cl('bad', {type: 'invalid'})
+      expect(badResourceType).toThrowError(/^Cloudinary :: type should be one of/)
+    })
+
+    it('allows overriding the default resource type', () => {
+      const cl = urlBuilder({video: imageParameters}, 'video')({cloudName: 'demo'})
+      expect(cl('my-video', {width: 300})).toBe('https://res.cloudinary.com/demo/video/upload/w_300/v1/my-video')
+    })
+
+    it('allows overriding the cname', () => {
+      const cl = urlBuilder()({cloudName: 'demo', cname: 'custom.domain.net'})
+      expect(cl('something')).toBe('https://custom.domain.net/demo/image/upload/v1/something')
+    })
+
+    it('creates non-secure urls if secure is set to false', () => {
+      const insecureUrl = '://res.cloudinary.com/demo/image/upload/v1/test'
+      expect(urlBuilder()({cloudName: 'demo', secure: false})('test')).toBe('http' + insecureUrl)
+      expect(urlBuilder()({cloudName: 'demo'})('test', {secure: false})).toBe('http' + insecureUrl)
+      expect(urlBuilder()({cloudName: 'demo', secure: false})('test', {secure: true})).toBe('https' + insecureUrl)
+    })
+
+    it('supports specifying a version', () => {
+      const cl = urlBuilder()({cloudName: 'demo'})
+      expect(cl('something', {version: '13245'})).toBe('https://res.cloudinary.com/demo/image/upload/v13245/something')
     })
 
     it('constructs simple transform urls', () => {
-      const url = imageUrl('simple.png', {height: 140, zoom: 1.2})
-      expect(url).toBe('https://res.cloudinary.com/demo/image/upload/w_auto,h_140,c_fill,z_1.2/simple.png')
+      const cl = urlBuilder({image: imageParameters})({cloudName: 'demo'})
+      const url = cl('simple.png', {height: 140, zoom: 1.2})
+      expect(url).toBe('https://res.cloudinary.com/demo/image/upload/h_140,z_1.2/v1/simple.png')
     })
 
-    it('constructs complex transform urls', () => {
-      expect(imageUrl('yellow_tulip.jpg', [
+    const defaults = {width: 'auto', height: 100, crop: 'fill'}
+
+    it('constructs simple transform urls with defaults', () => {
+      const cl = urlBuilder({image: imageParameters})({cloudName: 'demo', defaults})
+      const url = cl('simple.png', {height: 140, zoom: 1.2})
+      expect(url).toBe('https://res.cloudinary.com/demo/image/upload/w_auto,h_140,c_fill,z_1.2/v1/simple.png')
+    })
+
+    it('constructs complex transform urls (ignoring defaults)', () => {
+      const cl = urlBuilder({image: imageParameters})({cloudName: 'demo', defaults})
+      expect(cl('yellow_tulip.jpg', [
         {width: 220, height: 140, crop: 'fill'},
         {overlay: 'brown_sheep', width: 220, height: 140, x: 220, crop: 'fill'},
         {overlay: 'horses', width: 220, height: 140, x: -110, y: 140, crop: 'fill'},
@@ -86,12 +133,13 @@ describe('urlBuilder', () => {
         'l_butterfly.png,h_200,x_-10,a_10/' +
         'w_400,h_260,r_20,c_crop/' +
         'l_text:Parisienne_35_bold:Memories%20from%20our%20trip,co_rgb:990C47,y_155/' +
-        'e_shadow/yellow_tulip.jpg'
+        'e_shadow/v1/yellow_tulip.jpg'
       )
     })
 
     it('throws an error on an invalid parameter', () => {
-      const badUrl = () => imageUrl('test.jpg', {width: 220, height: 140, crop: 'bad_option'})
+      const cl = urlBuilder({image: imageParameters})({cloudName: 'demo'})
+      const badUrl = () => cl('test.jpg', {width: 220, height: 140, crop: 'bad_option'})
       expect(badUrl).toThrowError(/^Cloudinary Image :: crop should be one of /)
     })
   })

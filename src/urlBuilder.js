@@ -1,4 +1,4 @@
-import { invariantConfig as invariant, includes, shouldBeOneOf } from './utils'
+import { invariant, includes, shouldBeOneOf } from './utils'
 
 const typeOptions = [
   'upload', 'fetch', 'facebook', 'twitter', 'twitter_name', 'instagram', 'instagram_name', 'gplus', 'gravatar'
@@ -6,7 +6,7 @@ const typeOptions = [
 
 
 export const compile = (parameterSet, transform, defaultTransform) => {
-  if (!parameterSet || !transform) {
+  if (!transform || !parameterSet || Object.keys(transform).length === 0) {
     return ''
   }
 
@@ -24,18 +24,23 @@ export const compile = (parameterSet, transform, defaultTransform) => {
 }
 
 
-const urlBuilder = (parameterSets, defaultResourceType = 'image') => ({
+const urlBuilder = (parameterSets = {}, defaultResourceType = 'image') => ({
   cloudName,
+  // cdnSubdomain = false,
   cname = 'res.cloudinary.com',
-  defaultOptions: {
-    secure: defaultSecure = true,
+  secure: defaultSecure = true,
+  defaults: {
     type: defaultType = 'upload',
     ...defaultTransform
   } = {},
 }) => {
+  process.env.NODE_ENV !== 'production' && invariant(
+    cloudName, 'cloudName', cloudName, 'configuration is required', '/node_additional_topics#configuration_options'
+  )
+
   const baseUrl = `://${cname}/${cloudName}/`
 
-  return (publicId, options) => {
+  return (publicId, options = {}) => {
     let {
       resourceType = defaultResourceType,
       secure = defaultSecure,
@@ -51,12 +56,14 @@ const urlBuilder = (parameterSets, defaultResourceType = 'image') => ({
     }
 
     process.env.NODE_ENV !== 'production' && invariant(
-      resourceType === 'raw' || includes(resourceType, Object.keys(parameterSets)),
-      'resourceType', resourceType, shouldBeOneOf(Object.keys(parameterSets)),
+      !transform || Object.keys(transform).length === 0
+      || resourceType === 'raw' || includes(resourceType, Object.keys(parameterSets)),
+      'resourceType', resourceType, shouldBeOneOf(['raw', ...Object.keys(parameterSets)])
+      + ', fix the resource type or add additional transform parameters to the configuration', null
     )
 
     process.env.NODE_ENV !== 'production' && invariant(
-      includes(type, typeOptions), 'type', type, shouldBeOneOf(typeOptions),
+      includes(type, typeOptions), 'type', type, shouldBeOneOf(typeOptions), null
     )
 
     const compiledTransform = compile(parameterSets[resourceType], transform, defaultTransform)
