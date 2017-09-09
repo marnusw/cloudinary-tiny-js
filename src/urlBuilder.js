@@ -26,7 +26,7 @@ export const compile = (parameterSet, transform, defaultTransform) => {
 
 const urlBuilder = (parameterSets = {}, defaultResourceType = 'image') => ({
   cloudName,
-  // cdnSubdomain = false,
+  cdnSubdomain = false,
   cname = 'res.cloudinary.com',
   secure: defaultSecure = true,
   defaults: {
@@ -38,7 +38,8 @@ const urlBuilder = (parameterSets = {}, defaultResourceType = 'image') => ({
     cloudName, 'cloudName', cloudName, 'configuration is required', '/node_additional_topics#configuration_options'
   )
 
-  const baseUrl = `://${cname}/${cloudName}/`
+  const baseUrl = `${cname}/${cloudName}/`
+  let sub = ''
 
   return (publicId, options = {}) => {
     let {
@@ -66,9 +67,18 @@ const urlBuilder = (parameterSets = {}, defaultResourceType = 'image') => ({
       includes(type, typeOptions), 'type', type, shouldBeOneOf(typeOptions), null
     )
 
-    const compiledTransform = compile(parameterSets[resourceType], transform, defaultTransform)
+    process.env.NODE_ENV !== 'production' && invariant(
+      !cdnSubdomain || typeof cdnSubdomain === 'function',
+      'cdnSubdomain', cdnSubdomain, 'should be a CRC function: `(string) => number`', null
+    )
 
-    return `http${secure ? 's' : ''}${baseUrl}${resourceType}/${type}${compiledTransform}/v${version}/${publicId}`
+    if (cdnSubdomain) {
+      sub = `a${cdnSubdomain(publicId) % 5 + 1}.`
+    }
+
+    transform = compile(parameterSets[resourceType], transform, defaultTransform)
+
+    return `http${secure ? 's' : ''}://${sub}${baseUrl}${resourceType}/${type}${transform}/v${version}/${publicId}`
   }
 }
 

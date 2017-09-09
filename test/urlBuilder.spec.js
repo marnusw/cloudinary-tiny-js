@@ -88,6 +88,14 @@ describe('urlBuilder', () => {
       expect(cl('something')).toBe('https://custom.domain.net/demo/image/upload/v1/something')
     })
 
+    it('supports the cdnSubdomain option', () => {
+      const fakeCrc = string => string.length
+      const cl = urlBuilder()({cloudName: 'demo', cdnSubdomain: fakeCrc})
+      expect(cl('short')).toBe('https://a1.res.cloudinary.com/demo/image/upload/v1/short')
+      expect(cl('two')).toBe('https://a4.res.cloudinary.com/demo/image/upload/v1/two')
+      expect(cl('something')).toBe('https://a5.res.cloudinary.com/demo/image/upload/v1/something')
+    })
+
     it('creates non-secure urls if secure is set to false', () => {
       const insecureUrl = '://res.cloudinary.com/demo/image/upload/v1/test'
       expect(urlBuilder()({cloudName: 'demo', secure: false})('test')).toBe('http' + insecureUrl)
@@ -114,7 +122,7 @@ describe('urlBuilder', () => {
       expect(url).toBe('https://res.cloudinary.com/demo/image/upload/w_auto,h_140,c_fill,z_1.2/v1/simple.png')
     })
 
-    it('constructs complex transform urls (ignoring defaults)', () => {
+    it('constructs complex transform urls from an array (ignoring defaults)', () => {
       const cl = urlBuilder({image: imageParameters})({cloudName: 'demo', defaults})
       expect(cl('yellow_tulip.jpg', [
         {width: 220, height: 140, crop: 'fill'},
@@ -135,6 +143,26 @@ describe('urlBuilder', () => {
         'l_text:Parisienne_35_bold:Memories%20from%20our%20trip,co_rgb:990C47,y_155/' +
         'e_shadow/v1/yellow_tulip.jpg'
       )
+    })
+
+    it('constructs simple transform urls the transform property with other options', () => {
+      const cl = urlBuilder({video: imageParameters})({cloudName: 'demo', defaults})
+      const url = cl('yellow_tulip.mp4', {resourceType: 'video', transform: {height: 140, crop: 'scale'}})
+      expect(url).toBe('https://res.cloudinary.com/demo/video/upload/w_auto,h_140,c_scale/v1/yellow_tulip.mp4')
+    })
+
+    it('constructs complex transform urls the transform property with other options', () => {
+      const cl = urlBuilder({image: imageParameters})({cloudName: 'demo', defaults})
+      const url = cl('yellow_tulip.jpg', {
+        secure: false,
+        transform: [
+          {width: 220, height: 140, crop: 'fill'},
+          {overlay: 'brown_sheep', width: 220, height: 140, x: 220, crop: 'fill'},
+        ],
+      })
+      expect(url).toBe(
+        'http://res.cloudinary.com/demo/image/upload/w_220,h_140,c_fill/' +
+        'l_brown_sheep,w_220,h_140,x_220,c_fill/v1/yellow_tulip.jpg')
     })
 
     it('throws an error on an invalid parameter', () => {
