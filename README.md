@@ -19,15 +19,15 @@ That is a 92.5% reduction in size from the shrink-wrapped version.
 
 (Support for video transformations is coming soon)
 
-### Usage
+## Usage
 
-## Installation
+### Installation
 
 ```bash
 npm install cloudinary-tiny-js
 ```
 
-## Basic configuration
+### Basic configuration
 
 The default import is a factory function taking 
 [configuration options](http://cloudinary.com/documentation/node_additional_topics#configuration_options) 
