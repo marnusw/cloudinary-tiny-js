@@ -1,4 +1,4 @@
-import { invariantImage as invariant, isNumber, startsWith, includes, shouldBeOneOf } from './utils'
+import { invariantImage as invariant, isNumber, startsWith, includes, shouldBeOneOf } from '../utils'
 
 // http://cloudinary.com/documentation/image_transformation_reference#format_parameter
 const formatOptions = [
@@ -254,5 +254,3 @@ export default function compileImageParameter(parameter, value) {
 
   return urlParameters[parameter] + value
 }
-
-compileImageParameter.resourceType = 'image'

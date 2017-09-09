@@ -1,8 +1,6 @@
 import configureUrlBuilder from './urlBuilder'
-import socialUrlBuilder from './socialUrlBuilder'
-import fetchUrlBuilder from './fetchUrlBuilder'
-import imageParameters from './imageParameters'
-import videoParameters from './videoParameters'
+import imageParameters from './parameters/image'
+import videoParameters from './parameters/video'
 
 export default function cloudinary(options, defaultTransforms = {}) {
   const urlBuilder = configureUrlBuilder(options)
@@ -10,7 +8,5 @@ export default function cloudinary(options, defaultTransforms = {}) {
   return {
     video: urlBuilder(videoParameters, defaultTransforms.video)('upload'),
     image: imageUrlBuilder('upload'),
-    fetch: fetchUrlBuilder(imageUrlBuilder),
-    social: socialUrlBuilder(imageUrlBuilder),
   }
 }

@@ -16,5 +16,3 @@ export default function compileVideoParameter(parameter, value) {
 
   return urlParameters[parameter] + value
 }
-
-compileVideoParameter.resourceType = 'video'

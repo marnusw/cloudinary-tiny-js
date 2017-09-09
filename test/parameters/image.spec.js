@@ -1,4 +1,4 @@
-import imageParameter from '../src/imageParameters'
+import imageParameter from '../../src/parameters/image'
 
 describe('Image Transform Parameters', () => {
   describe('width', () => {

@@ -1,5 +1,5 @@
 import urlBuilder, { makeBaseUrl, compiler } from '../src/urlBuilder'
-import imageParameters from '../src/imageParameters'
+import imageParameters from '../src/parameters/image'
 
 describe('urlBuilder', () => {
   describe('makeBaseUrl', () => {

@@ -1,10 +1,10 @@
-import videoParameters from '../src/videoParameters'
+import videoParameter from '../../src/parameters/video'
 
 describe('Video Transform Parameters', () => {
   describe('invalid parameters', () => {
     it('throws an error', () => {
       try {
-        videoParameters('abc', 'def')
+        videoParameter('abc', 'def')
       } catch (error) {
         expect(error.message).toBe(`Cloudinary Video :: unknown transform parameter provided: 'abc'`)
         return

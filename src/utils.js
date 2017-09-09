@@ -11,6 +11,7 @@ const invariantFor = type => (
   }
 }
 
+export const invariantConfig = invariantFor('Config')
 export const invariantImage = invariantFor('Image')
 export const invariantVideo = invariantFor('Video')
 export const invariantSocial = invariantFor('Social')
