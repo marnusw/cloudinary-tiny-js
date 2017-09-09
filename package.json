@@ -1,7 +1,7 @@
 {
   "name": "cloudinary-tiny-js",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.0.0",
+  "description": "A much smaller alternative to `cloudinary-core` for client side image transformations",
   "main": "lib/index.js",
   "module": "es/index.js",
   "jsnext:main": "es/index.js",
@@ -13,7 +13,7 @@
   ],
   "scripts": {
     "clean": "rimraf lib dist es coverage",
-    "lint": "eslint src test build",
+    "lint": "eslint src test",
     "lint:staged": "lint-staged",
     "test": "cross-env BABEL_ENV=commonjs jest",
     "test:watch": "npm test -- --watch",
@@ -64,7 +64,6 @@
     "babel-plugin-transform-es2015-template-literals": "^6.3.13",
     "babel-plugin-transform-es2015-unicode-regex": "^6.3.13",
     "babel-plugin-transform-object-rest-spread": "^6.3.13",
-    "babel-register": "^6.3.13",
     "cross-env": "^5.0.1",
     "eslint": "^4.0.0",
     "eslint-config-react-app": "^15.1.0",
