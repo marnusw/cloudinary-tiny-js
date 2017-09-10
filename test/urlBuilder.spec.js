@@ -78,7 +78,7 @@ describe('urlBuilder', () => {
       expect(badResourceType).toThrowError(/^Cloudinary :: type should be one of/)
     })
 
-    it('allows overriding the default resource type', () => {
+    it('allows overriding the base default resource type', () => {
       const cl = urlBuilder({video: imageParameters}, 'video')({cloudName: 'demo'})
       expect(cl('my-video', {width: 300})).toBe('https://res.cloudinary.com/demo/video/upload/w_300/v1/my-video')
     })
@@ -101,6 +101,18 @@ describe('urlBuilder', () => {
       expect(urlBuilder()({cloudName: 'demo', secure: false})('test')).toBe('http' + insecureUrl)
       expect(urlBuilder()({cloudName: 'demo'})('test', {secure: false})).toBe('http' + insecureUrl)
       expect(urlBuilder()({cloudName: 'demo', secure: false})('test', {secure: true})).toBe('https' + insecureUrl)
+    })
+
+    it('allows configuring a default resourceType and type', () => {
+      const cl = urlBuilder()({
+        cloudName: 'demo',
+        defaults: {resourceType: 'raw', type: 'fetch'},
+      })
+      expect(cl('something')).toBe('https://res.cloudinary.com/demo/raw/fetch/v1/something')
+      expect(cl('something', {
+        resourceType: 'image',
+        type: 'upload'
+      })).toBe('https://res.cloudinary.com/demo/image/upload/v1/something')
     })
 
     it('supports specifying a version', () => {

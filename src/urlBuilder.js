@@ -25,13 +25,14 @@ export const compile = (parameterSet, transform, defaultTransform) => {
 }
 
 
-const urlBuilder = (parameterSets = {}, defaultResourceType = 'image') => ({
+const urlBuilder = (parameterSets = {}, baseResourceType = 'image') => ({
   cloudName,
   cdnSubdomain = false,
   cname = 'res.cloudinary.com',
   secure: defaultSecure = true,
   defaults: {
     type: defaultType = 'upload',
+    resourceType: defaultResourceType = baseResourceType,
     ...defaultTransform
   } = {},
 }) => {
