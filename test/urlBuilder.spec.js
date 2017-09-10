@@ -122,6 +122,12 @@ describe('urlBuilder', () => {
       expect(url).toBe('https://res.cloudinary.com/demo/image/upload/w_auto,h_140,c_fill,z_1.2/v1/simple.png')
     })
 
+    it('supports clearing defaults by passing null', () => {
+      const cl = urlBuilder({image: imageParameters})({cloudName: 'demo', defaults})
+      const url = cl('simple.png', {width: null, height: null, zoom: 1.2})
+      expect(url).toBe('https://res.cloudinary.com/demo/image/upload/c_fill,z_1.2/v1/simple.png')
+    })
+
     it('constructs complex transform urls from an array (ignoring defaults)', () => {
       const cl = urlBuilder({image: imageParameters})({cloudName: 'demo', defaults})
       expect(cl('yellow_tulip.jpg', [

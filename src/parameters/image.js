@@ -197,7 +197,7 @@ const urlParameters = {
 
 export default function compileImageParameter(parameter, value) {
   if (value === null) {
-    return ''
+    return false
   }
 
   switch (parameter) {

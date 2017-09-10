@@ -13,6 +13,7 @@ export const compile = (parameterSet, transform, defaultTransform) => {
   const compile = parameters => (
     Object.keys(parameters)
       .map(param => parameterSet(param, parameters[param]))
+      .filter(value => value)
       .join(',')
   )
 

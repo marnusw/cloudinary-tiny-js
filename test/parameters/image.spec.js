@@ -482,8 +482,8 @@ describe('Image Transform Parameters', () => {
   })
 
   describe('null value on any parameter', () => {
-    it('returns an empty string', () => {
-      expect(imageParameter('crop', null)).toBe('')
+    it('returns false for easy filtering', () => {
+      expect(imageParameter('crop', null)).toBe(false)
     })
   })
 
