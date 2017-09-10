@@ -172,7 +172,7 @@ expect(url).toBe(
 )
 ```
 
-To perform multiple transformations an array of transform option objects can be passed; the
+To perform multiple transformations an array of transform objects can be passed; the
 array can be passed directly as the second parameter or on the `transform` property if other
 options are to be provided.
 
