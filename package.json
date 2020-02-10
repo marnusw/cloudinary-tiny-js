@@ -1,6 +1,6 @@
 {
   "name": "cloudinary-tiny-js",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "description": "A much smaller alternative to cloudinary-core for client side image transformations",
   "main": "lib/index.js",
   "module": "es/index.js",
