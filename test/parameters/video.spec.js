@@ -6,7 +6,9 @@ describe('Video Transform Parameters', () => {
       try {
         videoParameter('abc', 'def')
       } catch (error) {
-        expect(error.message).toBe(`Cloudinary Video :: unknown transform parameter provided: 'abc'`)
+        expect(error.message).toBe(
+          `Cloudinary Video :: unknown transform parameter provided: 'abc'`,
+        )
         return
       }
       throw new Error('videoParameters should have thrown')

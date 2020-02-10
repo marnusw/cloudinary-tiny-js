@@ -3,8 +3,10 @@ const validate = {}
 const urlParameters = {}
 
 export default function compileVideoParameter(parameter, value) {
-  switch (parameter) {
+  switch (
+    parameter
     // no default
+  ) {
   }
 
   if (process.env.NODE_ENV !== 'production') {

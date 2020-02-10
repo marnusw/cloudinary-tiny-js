@@ -218,19 +218,21 @@ describe('Image Transform Parameters', () => {
       expect(imageParameter('border', '4px_solid_rgb:2040faf0')).toBe('bo_4px_solid_rgb:2040faf0')
     })
     it('accepts a object with color and optional width', () => {
-      expect(imageParameter('border', {color: 'red'})).toBe('bo_1px_solid_red')
-      expect(imageParameter('border', {color: '#3020ff'})).toBe('bo_1px_solid_rgb:3020ff')
-      expect(imageParameter('border', {color: '#3020ff22'})).toBe('bo_1px_solid_rgb:3020ff22')
-      expect(imageParameter('border', {color: 'rgb:3020ff'})).toBe('bo_1px_solid_rgb:3020ff')
-      expect(imageParameter('border', {color: 'rgb:3020ff22'})).toBe('bo_1px_solid_rgb:3020ff22')
-      expect(imageParameter('border', {color: 'red', width: 3})).toBe('bo_3px_solid_red')
-      expect(imageParameter('border', {color: '#3020ff', width: '2px'})).toBe('bo_2px_solid_rgb:3020ff')
+      expect(imageParameter('border', { color: 'red' })).toBe('bo_1px_solid_red')
+      expect(imageParameter('border', { color: '#3020ff' })).toBe('bo_1px_solid_rgb:3020ff')
+      expect(imageParameter('border', { color: '#3020ff22' })).toBe('bo_1px_solid_rgb:3020ff22')
+      expect(imageParameter('border', { color: 'rgb:3020ff' })).toBe('bo_1px_solid_rgb:3020ff')
+      expect(imageParameter('border', { color: 'rgb:3020ff22' })).toBe('bo_1px_solid_rgb:3020ff22')
+      expect(imageParameter('border', { color: 'red', width: 3 })).toBe('bo_3px_solid_red')
+      expect(imageParameter('border', { color: '#3020ff', width: '2px' })).toBe(
+        'bo_2px_solid_rgb:3020ff',
+      )
     })
     it('throws when invalid', () => {
       expect(() => imageParameter('border', 'bad')).toThrowErrorMatchingSnapshot()
-      expect(() => imageParameter('border', {width: 1})).toThrowErrorMatchingSnapshot()
-      expect(() => imageParameter('border', {color: '#3020f'})).toThrowErrorMatchingSnapshot()
-      expect(() => imageParameter('border', {color: '#3020ff2'})).toThrowErrorMatchingSnapshot()
+      expect(() => imageParameter('border', { width: 1 })).toThrowErrorMatchingSnapshot()
+      expect(() => imageParameter('border', { color: '#3020f' })).toThrowErrorMatchingSnapshot()
+      expect(() => imageParameter('border', { color: '#3020ff2' })).toThrowErrorMatchingSnapshot()
     })
   })
 
@@ -257,51 +259,67 @@ describe('Image Transform Parameters', () => {
       expect(imageParameter('overlay', 'badge')).toBe('l_badge')
       expect(imageParameter('overlay', 'red_button.jpg')).toBe('l_red_button.jpg')
       expect(imageParameter('overlay', 'text:Arial_50:Smile!')).toBe('l_text:Arial_50:Smile!')
-      expect(imageParameter('overlay', 'text:default_style:Hello+World')).toBe('l_text:default_style:Hello+World')
+      expect(imageParameter('overlay', 'text:default_style:Hello+World')).toBe(
+        'l_text:default_style:Hello+World',
+      )
     })
     it('accepts an object with `text` and a `publicId`', () => {
-      expect(imageParameter('overlay', {
-        text: 'Hello World',
-        publicId: 'default_style'
-      })).toBe('l_text:default_style:Hello%20World')
+      expect(
+        imageParameter('overlay', {
+          text: 'Hello World',
+          publicId: 'default_style',
+        }),
+      ).toBe('l_text:default_style:Hello%20World')
     })
     it('accepts an object with `text` and text caption options', () => {
-      expect(imageParameter('overlay', {
-        text: 'Hello World',
-        fontFamily: 'Times New Roman',
-        fontSize: '16',
-      })).toBe('l_text:Times%20New%20Roman_16:Hello%20World')
-      expect(imageParameter('overlay', {
-        text: 'Flowers',
-        fontFamily: 'verdana',
-        fontSize: 18,
-        fontWeight: 'bold',
-        fontStyle: 'italic',
-        textDecoration: 'underline',
-        textAlign: 'center',
-        stroke: 'stroke',
-        letterSpacing: 4,
-        lineSpacing: 3.3,
-      })).toBe('l_text:verdana_18_bold_italic_underline_center_stroke_letter_spacing_4_line_spacing_3.3:Flowers')
-      expect(imageParameter('overlay', {
-        text: 'Bananas',
-        fontFamily: 'Arial',
-        fontSize: 12,
-        fontWeight: 'normal',
-        fontStyle: 'normal',
-        textDecoration: 'none',
-        textAlign: 'left',
-        stroke: 'none',
-        letterSpacing: 2,
-        lineSpacing: 1.5,
-      })).toBe('l_text:Arial_12_left_letter_spacing_2_line_spacing_1.5:Bananas')
+      expect(
+        imageParameter('overlay', {
+          text: 'Hello World',
+          fontFamily: 'Times New Roman',
+          fontSize: '16',
+        }),
+      ).toBe('l_text:Times%20New%20Roman_16:Hello%20World')
+      expect(
+        imageParameter('overlay', {
+          text: 'Flowers',
+          fontFamily: 'verdana',
+          fontSize: 18,
+          fontWeight: 'bold',
+          fontStyle: 'italic',
+          textDecoration: 'underline',
+          textAlign: 'center',
+          stroke: 'stroke',
+          letterSpacing: 4,
+          lineSpacing: 3.3,
+        }),
+      ).toBe(
+        'l_text:verdana_18_bold_italic_underline_center_stroke_letter_spacing_4_line_spacing_3.3:Flowers',
+      )
+      expect(
+        imageParameter('overlay', {
+          text: 'Bananas',
+          fontFamily: 'Arial',
+          fontSize: 12,
+          fontWeight: 'normal',
+          fontStyle: 'normal',
+          textDecoration: 'none',
+          textAlign: 'left',
+          stroke: 'none',
+          letterSpacing: 2,
+          lineSpacing: 1.5,
+        }),
+      ).toBe('l_text:Arial_12_left_letter_spacing_2_line_spacing_1.5:Bananas')
     })
     it('throws when invalid', () => {
-      expect(() => imageParameter('overlay', {text: 'No fontFamily', fontSize: 12})).toThrowErrorMatchingSnapshot()
-      expect(() => imageParameter('overlay', {
-        text: 'No fontSize',
-        fontFamily: 'Arial'
-      })).toThrowErrorMatchingSnapshot()
+      expect(() =>
+        imageParameter('overlay', { text: 'No fontFamily', fontSize: 12 }),
+      ).toThrowErrorMatchingSnapshot()
+      expect(() =>
+        imageParameter('overlay', {
+          text: 'No fontSize',
+          fontFamily: 'Arial',
+        }),
+      ).toThrowErrorMatchingSnapshot()
     })
   })
 
@@ -310,51 +328,67 @@ describe('Image Transform Parameters', () => {
       expect(imageParameter('underlay', 'badge')).toBe('u_badge')
       expect(imageParameter('underlay', 'red_button.jpg')).toBe('u_red_button.jpg')
       expect(imageParameter('underlay', 'text:Arial_50:Smile!')).toBe('u_text:Arial_50:Smile!')
-      expect(imageParameter('underlay', 'text:default_style:Hello+World')).toBe('u_text:default_style:Hello+World')
+      expect(imageParameter('underlay', 'text:default_style:Hello+World')).toBe(
+        'u_text:default_style:Hello+World',
+      )
     })
     it('accepts an object with `text` and a `publicId`', () => {
-      expect(imageParameter('underlay', {
-        text: 'Hello World',
-        publicId: 'default_style'
-      })).toBe('u_text:default_style:Hello%20World')
+      expect(
+        imageParameter('underlay', {
+          text: 'Hello World',
+          publicId: 'default_style',
+        }),
+      ).toBe('u_text:default_style:Hello%20World')
     })
     it('accepts an object with `text` and text caption options', () => {
-      expect(imageParameter('underlay', {
-        text: 'Hello World',
-        fontFamily: 'Times New Roman',
-        fontSize: '16',
-      })).toBe('u_text:Times%20New%20Roman_16:Hello%20World')
-      expect(imageParameter('underlay', {
-        text: 'Flowers',
-        fontFamily: 'verdana',
-        fontSize: 18,
-        fontWeight: 'bold',
-        fontStyle: 'italic',
-        textDecoration: 'underline',
-        textAlign: 'center',
-        stroke: 'stroke',
-        letterSpacing: 4,
-        lineSpacing: 3.3,
-      })).toBe('u_text:verdana_18_bold_italic_underline_center_stroke_letter_spacing_4_line_spacing_3.3:Flowers')
-      expect(imageParameter('underlay', {
-        text: 'Bananas',
-        fontFamily: 'Arial',
-        fontSize: 12,
-        fontWeight: 'normal',
-        fontStyle: 'normal',
-        textDecoration: 'none',
-        textAlign: 'left',
-        stroke: 'none',
-        letterSpacing: 2,
-        lineSpacing: 1.5,
-      })).toBe('u_text:Arial_12_left_letter_spacing_2_line_spacing_1.5:Bananas')
+      expect(
+        imageParameter('underlay', {
+          text: 'Hello World',
+          fontFamily: 'Times New Roman',
+          fontSize: '16',
+        }),
+      ).toBe('u_text:Times%20New%20Roman_16:Hello%20World')
+      expect(
+        imageParameter('underlay', {
+          text: 'Flowers',
+          fontFamily: 'verdana',
+          fontSize: 18,
+          fontWeight: 'bold',
+          fontStyle: 'italic',
+          textDecoration: 'underline',
+          textAlign: 'center',
+          stroke: 'stroke',
+          letterSpacing: 4,
+          lineSpacing: 3.3,
+        }),
+      ).toBe(
+        'u_text:verdana_18_bold_italic_underline_center_stroke_letter_spacing_4_line_spacing_3.3:Flowers',
+      )
+      expect(
+        imageParameter('underlay', {
+          text: 'Bananas',
+          fontFamily: 'Arial',
+          fontSize: 12,
+          fontWeight: 'normal',
+          fontStyle: 'normal',
+          textDecoration: 'none',
+          textAlign: 'left',
+          stroke: 'none',
+          letterSpacing: 2,
+          lineSpacing: 1.5,
+        }),
+      ).toBe('u_text:Arial_12_left_letter_spacing_2_line_spacing_1.5:Bananas')
     })
     it('throws when invalid', () => {
-      expect(() => imageParameter('underlay', {text: 'No fontFamily', fontSize: 12})).toThrowErrorMatchingSnapshot()
-      expect(() => imageParameter('underlay', {
-        text: 'No fontSize',
-        fontFamily: 'Arial'
-      })).toThrowErrorMatchingSnapshot()
+      expect(() =>
+        imageParameter('underlay', { text: 'No fontFamily', fontSize: 12 }),
+      ).toThrowErrorMatchingSnapshot()
+      expect(() =>
+        imageParameter('underlay', {
+          text: 'No fontSize',
+          fontFamily: 'Arial',
+        }),
+      ).toThrowErrorMatchingSnapshot()
     })
   })
 
@@ -365,7 +399,9 @@ describe('Image Transform Parameters', () => {
     })
     it('throws when invalid', () => {
       expect(() => imageParameter('defaultImage', 'noExtension')).toThrowErrorMatchingSnapshot()
-      expect(() => imageParameter('defaultImage', 'badExtension.abc')).toThrowErrorMatchingSnapshot()
+      expect(() =>
+        imageParameter('defaultImage', 'badExtension.abc'),
+      ).toThrowErrorMatchingSnapshot()
     })
   })
 
@@ -412,7 +448,9 @@ describe('Image Transform Parameters', () => {
     it('throws when invalid', () => {
       expect(() => imageParameter('colorSpace', 'bad')).toThrowErrorMatchingSnapshot()
       expect(() => imageParameter('colorSpace', 'bad:some_id')).toThrowErrorMatchingSnapshot()
-      expect(() => imageParameter('colorSpace', 'cs_icc:no_extension')).toThrowErrorMatchingSnapshot()
+      expect(() =>
+        imageParameter('colorSpace', 'cs_icc:no_extension'),
+      ).toThrowErrorMatchingSnapshot()
     })
   })
 
@@ -469,10 +507,14 @@ describe('Image Transform Parameters', () => {
       expect(imageParameter('flags', 'attachment')).toBe('fl_attachment')
     })
     it('accepts an array of valid values', () => {
-      expect(imageParameter('flags', ['clip_evenodd', 'cutter', 'force_strip'])).toBe('fl_clip_evenodd.cutter.force_strip')
+      expect(imageParameter('flags', ['clip_evenodd', 'cutter', 'force_strip'])).toBe(
+        'fl_clip_evenodd.cutter.force_strip',
+      )
     })
     it('accepts a string of `.` separated values', () => {
-      expect(imageParameter('flags', 'layer_apply.lossy.no_overflow')).toBe('fl_layer_apply.lossy.no_overflow')
+      expect(imageParameter('flags', 'layer_apply.lossy.no_overflow')).toBe(
+        'fl_layer_apply.lossy.no_overflow',
+      )
     })
     it('throws when invalid', () => {
       expect(() => imageParameter('density', 'bad')).toThrowErrorMatchingSnapshot()
@@ -492,7 +534,9 @@ describe('Image Transform Parameters', () => {
       try {
         imageParameter('abc', 'def')
       } catch (error) {
-        expect(error.message).toBe(`Cloudinary Image :: unknown transform parameter provided: 'abc'`)
+        expect(error.message).toBe(
+          `Cloudinary Image :: unknown transform parameter provided: 'abc'`,
+        )
         return
       }
       throw new Error('imageParameter should have thrown')
