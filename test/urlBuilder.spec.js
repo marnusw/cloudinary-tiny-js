@@ -14,8 +14,8 @@ describe('urlBuilder', () => {
 
     it('returns the default transform for no- or an empty transform', () => {
       const defaultTransform = { width: 220, crop: 'fill' }
-      expect(compile(imageParameters, undefined, defaultTransform)).toBe('')
-      expect(compile(imageParameters, {}, defaultTransform)).toBe('')
+      expect(compile(imageParameters, undefined, defaultTransform)).toBe('/w_220,c_fill')
+      expect(compile(imageParameters, {}, defaultTransform)).toBe('/w_220,c_fill')
     })
 
     it('compiles a single transform with one or more parameters', () => {

@@ -13,22 +13,21 @@ const typeOptions = [
 ]
 
 export const compile = (parameterSet, transform, defaultTransform) => {
-  if (!transform || !parameterSet || Object.keys(transform).length === 0) {
+  if (!parameterSet) {
     return ''
   }
 
   const compile = parameters =>
     Object.keys(parameters)
       .map(param => parameterSet(param, parameters[param]))
-      .filter(value => value)
+      .filter(Boolean)
       .join(',')
 
-  return (
-    '/' +
-    (Array.isArray(transform)
-      ? transform.map(compile).join('/')
-      : compile({ ...defaultTransform, ...transform }))
-  )
+  const compiledTransform = Array.isArray(transform)
+    ? transform.map(compile).join('/')
+    : compile({ ...defaultTransform, ...transform })
+
+  return compiledTransform ? `/${compiledTransform}` : ''
 }
 
 const urlBuilder = (parameterSets = {}, baseResourceType = 'image') => ({
