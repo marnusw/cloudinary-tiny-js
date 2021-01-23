@@ -20,9 +20,7 @@
   ],
   "env": {
     "commonjs": {
-      "plugins": [
-        ["@babel/transform-modules-commonjs", { "loose": true }]
-      ]
+      "plugins": [["@babel/transform-modules-commonjs", { "loose": true }]]
     }
   }
 }

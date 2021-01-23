@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "module": "ES2020",
+    "outDir": "./es"
+  },
+  "exclude": ["./src/**/*.spec.ts"]
+}
