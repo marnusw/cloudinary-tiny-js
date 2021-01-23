@@ -14,15 +14,25 @@ describe('cloudinary configuration', () => {
   })
 
   it('accepts all possible config values', () => {
-    const cl = cloudinary({
-      cloudName: 'demo',
-      assetType: 'video',
-      deliveryType: 'fetch',
-      secure: false,
-      cdnSubdomain: 'sub',
-      cname: 'example.net',
-    })
-    expect(cl('something')).toBe('http://sub.example.net/demo/video/fetch/something')
+    expect(
+      cloudinary({
+        cloudName: 'demo',
+        assetType: 'video',
+        deliveryType: 'fetch',
+        secure: false,
+        cdnSubdomain: 'sub',
+        cname: 'example.net',
+      })('something'),
+    ).toBe('http://example.net/demo/video/fetch/something')
+    expect(
+      cloudinary({
+        cloudName: 'demo',
+        assetType: 'video',
+        deliveryType: 'fetch',
+        secure: false,
+        cdnSubdomain: 'sub',
+      })('something'),
+    ).toBe('http://sub.cloudinary.com/demo/video/fetch/something')
   })
 
   it('overrides selected config values provided with the transform', () => {

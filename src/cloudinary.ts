@@ -20,18 +20,20 @@ export interface CloudinaryConfiguration {
   deliveryType?: DeliveryType
   /** Use https, `true` by default. */
   secure?: boolean
-  /** A custom subdomain, other than `res`. */
+  /** Override the subdomain when using a private CDN distribution. */
   cdnSubdomain?: string
   /** A custom host name, other than `cloudinary.com`. */
   cname?: string
-  /** Any transforms passed later will extend these defaults. */
+  /** Transforms applied to all images, any transforms passed later will extend these defaults. */
   imageTransformDefaults?: ImageTransform
 }
 
 export interface ImageTransformOptions extends ImageTransform {
-  /** Specify a single or multiple transforms to apply. The options of a single transform can also
-   * be included directly on the parent object. **Note that the default transforms are only applied
-   * when a single transform is provided.** */
+  /**
+   * Specify a single or multiple transformations to apply. The options of a single transform can also
+   * be included directly on this parent object. Note that the default transforms are only applied
+   * when a single transform is provided and not for an array of transforms.
+   */
   transformations?: ImageTransform | ImageTransform[]
   /**
    * Override the `assetType` provided in the configuration.
@@ -56,7 +58,7 @@ const cloudinary = ({
   deliveryType: deliveryTypeDefault = 'upload',
   secure = true,
   cdnSubdomain = 'res',
-  cname = 'cloudinary.com',
+  cname = `${cdnSubdomain}.cloudinary.com`,
   imageTransformDefaults: defaultTransform,
 }: CloudinaryConfiguration) => {
   if (process.env.NODE_ENV !== 'production') {
@@ -65,7 +67,7 @@ const cloudinary = ({
     }
   }
 
-  const baseUrl = `http${secure ? 's' : ''}://${cdnSubdomain}.${cname}/${cloudName}/`
+  const baseUrl = `http${secure ? 's' : ''}://${cname}/${cloudName}/`
 
   return (publicId: string, options?: ImageTransformOptions | ImageTransform[]) => {
     if (Array.isArray(options)) {

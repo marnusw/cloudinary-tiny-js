@@ -1,3 +1,9 @@
+### v2.0.0 (23 January 2021)
+
+- [BREAKING] Configuration options have changed, and some advanced options have been removed for simplicity.
+- [ENHANCEMENT] Use TypeScript for up to date typings.
+- Add Travis CS.
+
 ### v1.0.0 (10 February 2020)
 
 - [UPGRADE] All dependencies.
