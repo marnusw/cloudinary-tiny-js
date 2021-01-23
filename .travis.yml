@@ -1,0 +1,9 @@
+language: node_js
+
+node_js:
+  - 14.0
+
+script:
+  - yarn lint
+  - yarn typecheck
+  - yarn test:ci

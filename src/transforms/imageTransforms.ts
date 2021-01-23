@@ -1,10 +1,5 @@
-import {
-  invariantImage as invariant,
-  isNumber,
-  startsWith,
-  includes,
-  shouldBeOneOf,
-} from '../utils'
+import { BorderObject, ImageTransform, StringOverlayStyle } from './imageTransformTypes'
+import { invariantImage as invariant, isNumber, shouldBeOneOf } from '../utils'
 
 // http://cloudinary.com/documentation/image_transformation_reference#format_parameter
 const formatOptions = [
@@ -138,95 +133,117 @@ const flagOptions = [
   'tiled',
 ]
 
-const validate = {
-  width: value =>
+// Undefined or null values are filtered before validation
+type ImgOpt = Required<ImageTransform>
+
+type Validators = { [Key in keyof ImgOpt]: (value: ImgOpt[Key]) => void } & {
+  borderObjectColor: (value: BorderObject) => void
+} & { textCaptionStyles: (value: StringOverlayStyle) => void }
+
+const validate: Validators = {
+  width: (value: ImgOpt['width']) =>
     invariant(
-      isNumber(value) || value === 'auto' || startsWith('auto:', value),
+      isNumber(value) || (typeof value === 'string' && value.match(/^auto(?:$|(?::.+))/)),
       'width',
       value,
       `should be a number, 'auto', or a string starting with 'auto:'`,
     ),
-  height: value => invariant(isNumber(value), 'height', value, 'should be a number'),
-  crop: value => invariant(includes(value, cropOptions), 'crop', value, shouldBeOneOf(cropOptions)),
-  aspectRatio: value =>
+  height: (value: ImgOpt['height']) =>
+    invariant(isNumber(value), 'height', value, 'should be a number'),
+  crop: (value: ImgOpt['crop']) =>
+    invariant(value && cropOptions.includes(value), 'crop', value, shouldBeOneOf(cropOptions)),
+  aspectRatio: (value: ImgOpt['aspectRatio']) =>
     invariant(
-      isNumber(value) || value.match(/^\d+:\d+$/),
+      isNumber(value) || (typeof value === 'string' && value.match(/^\d+:\d+$/)),
       'aspectRatio',
       value,
       'should be a number or have the form x:y',
     ),
-  gravity: value =>
+  gravity: (value: ImgOpt['gravity']) =>
     invariant(
-      includes(value, gravityOptions) || value === 'auto' || startsWith('auto:', value),
+      gravityOptions.includes(value) || value === 'auto' || value.startsWith('auto:'),
       'gravity',
       value,
       `${shouldBeOneOf(gravityOptions)}, 'auto', or a string starting with 'auto:'`,
     ),
-  zoom: value => invariant(isNumber(value), 'zoom', value, 'should be a number'),
-  x: value => invariant(isNumber(value), 'x', value, 'should be a number'),
-  y: value => invariant(isNumber(value), 'y', value, 'should be a number'),
-  fetchFormat: value =>
+  zoom: (value: ImgOpt['zoom']) => invariant(isNumber(value), 'zoom', value, 'should be a number'),
+  x: (value: ImgOpt['x']) => invariant(isNumber(value), 'x', value, 'should be a number'),
+  y: (value: ImgOpt['y']) => invariant(isNumber(value), 'y', value, 'should be a number'),
+  format: (value: ImgOpt['fetchFormat']) =>
     invariant(
-      includes(value, ['auto', ...formatOptions]),
+      ['auto', ...formatOptions].includes(value),
       'fetchFormat',
       value,
       `${shouldBeOneOf(['auto', ...formatOptions])} or 'auto'`,
     ),
-  quality: value =>
+  fetchFormat(value: ImgOpt['fetchFormat']) {
+    this.format(value)
+  },
+  quality: (value: ImgOpt['quality']) =>
     invariant(
       (isNumber(value) && 1 <= +value && +value <= 100) ||
-        (typeof value === 'string' && value.match(/^\d+:\d+$/)) ||
-        includes(value, qualityOptions),
+        (typeof value === 'string' && (value.match(/^\d+:\d+$/) || qualityOptions.includes(value))),
       'quality',
       value,
       `${shouldBeOneOf(formatOptions)}, a number between 1 and 100, or have the form x:y`,
     ),
-  radius: value =>
+  radius: (value: ImgOpt['radius']) =>
     invariant(
-      isNumber(value) || value === 'max' || value.match(/^\d+(?::\d+){0,3}$/),
+      isNumber(value) ||
+        value === 'max' ||
+        (typeof value === 'string' && value.match(/^\d+(?::\d+){0,3}$/)),
       'radius',
       value,
       `should be a number, 'max' or have the form x[:y[:z[:u]]]`,
     ),
-  angle: value =>
+  angle: (value: ImgOpt['angle']) =>
     invariant(
-      isNumber(value) || includes(value, angleOptions),
+      isNumber(value) || (typeof value === 'string' && angleOptions.includes(value)),
       'angle',
       value,
       `${shouldBeOneOf(angleOptions)} or a number`,
     ),
-  effect: value => {},
-  opacity: value =>
+  effect: () => {
+    // No validation
+  },
+  opacity: (value: ImgOpt['opacity']) =>
     invariant(
       isNumber(value) && 0 <= +value && +value <= 100,
       'opacity',
       value,
       'should be a number between 0 and 100',
     ),
-  border: value =>
+  border: (value: ImgOpt['border']) =>
     invariant(
-      value.match(new RegExp(`^\\d+px_solid_${colorRegex.toString().replace(/[/^i]/g, '')}$`, 'i')),
+      typeof value === 'string' &&
+        value.match(
+          new RegExp(`^\\d+px_solid_${colorRegex.toString().replace(/[/^i]/g, '')}$`, 'i'),
+        ),
       'border',
       value,
       `should be an object with 'width' & 'color' or a string of the form 'width_style_color'`,
     ),
-  borderObjectColor: value =>
+  borderObjectColor: (value: BorderObject) =>
     invariant(
       'color' in value,
       'border',
       JSON.stringify(value),
       `should contain a 'color' property when provided as an object`,
     ),
-  background: value =>
+  background: (value: ImgOpt['background']) =>
     invariant(
-      typeof value === 'string' && (includes(value, backgroundOptions) || value.match(colorRegex)),
+      backgroundOptions.includes(value) || value.match(colorRegex),
       'background',
       value,
       `${shouldBeOneOf(backgroundOptions)} or a color`,
     ),
-  overlay: value => {},
-  underlay: value => {},
-  textCaptionStyles: value => {
+  overlay: () => {
+    // No validation
+  },
+  underlay: () => {
+    // No validation
+  },
+  textCaptionStyles: (value: StringOverlayStyle) => {
     const {
       fontFamily,
       fontSize,
@@ -246,12 +263,12 @@ const validate = {
       '/image_transformations#adding_text_captions',
     )
     invariant(
-      (!fontWeight || includes(fontWeight, ['normal', 'bold'])) &&
-        (!fontStyle || includes(fontStyle, ['normal', 'italic'])) &&
-        (!textDecoration || includes(textDecoration, ['none', 'underline', 'strikethrough'])) &&
+      (!fontWeight || ['normal', 'bold'].includes(fontWeight)) &&
+        (!fontStyle || ['normal', 'italic'].includes(fontStyle)) &&
+        (!textDecoration || ['none', 'underline', 'strikethrough'].includes(textDecoration)) &&
         (!textAlign ||
-          includes(textAlign, ['left', 'center', 'right', 'start', 'end', 'justify'])) &&
-        (!stroke || includes(stroke, ['none', 'stroke'])) &&
+          ['left', 'center', 'right', 'start', 'end', 'justify'].includes(textAlign)) &&
+        (!stroke || ['none', 'stroke'].includes(stroke)) &&
         (!letterSpacing || isNumber(letterSpacing)) &&
         (!lineSpacing || isNumber(lineSpacing)),
       'text caption',
@@ -260,56 +277,57 @@ const validate = {
       '/image_transformations#adding_text_captions',
     )
   },
-  defaultImage: value =>
+  defaultImage: (value: ImgOpt['defaultImage']) =>
     invariant(
       value.match(/^[\w+-]+\.[\w]{3,4}$/) &&
-        includes(value.substr(value.indexOf('.') + 1), formatOptions),
+        formatOptions.includes(value.substr(value.indexOf('.') + 1)),
       'defaultImage',
       value,
       `must include a file extension which ${shouldBeOneOf(formatOptions)}`,
     ),
-  delay: value =>
+  delay: (value: ImgOpt['delay']) =>
     invariant(isNumber(value) && value >= 0, 'delay', value, `must be a positive number`),
-  color: value =>
+  color: (value: ImgOpt['color']) =>
     invariant(
       value.match(colorRegex),
       'color',
       value,
       `must be a named color, short #rgb[a] or long #rrggbb[aa] hex value`,
     ),
-  colorSpace: value =>
+  colorSpace: (value: ImgOpt['colorSpace']) =>
     invariant(
-      includes(value, colorSpaceOptions) || value.match(/^icc:[\w+-]+\.[\w]{3,4}$/),
+      colorSpaceOptions.includes(value) || value.match(/^icc:[\w+-]+\.[\w]{3,4}$/),
       'colorSpace',
       value,
       `${shouldBeOneOf(colorSpaceOptions)} or 'icc:(public_id)'`,
     ),
-  dpr: value =>
+  dpr: (value: ImgOpt['dpr']) =>
     invariant(
       value === 'auto' || (isNumber(value) && value > 0),
       'dpr',
       value,
       'should be `auto` or a number greater than 0',
     ),
-  page: value =>
+  page: (value: ImgOpt['page']) =>
     invariant(isNumber(value) && value > 0, 'page', value, 'should be an integer greater than 0'),
-  density: value =>
+  density: (value: ImgOpt['density']) =>
     invariant(
       isNumber(value) && 0 < value && value <= 300,
       'density',
       value,
       'should be a number greater than 0 up to 300',
     ),
-  flags: value =>
+  flags: (value: ImgOpt['flags']): asserts value is ImgOpt['flags'] => {
     invariant(
-      value.split('.').every(flag => includes(flag, flagOptions)),
+      (Array.isArray(value) ? value : value.split('.')).every((flag) => flagOptions.includes(flag)),
       'flags',
       JSON.stringify(value),
       `${shouldBeOneOf(flagOptions)}, an array of options or '.' separated options`,
-    ),
+    )
+  },
 }
 
-const urlParameters = {
+const urlParameters: Record<keyof ImageTransform, string> = {
   width: 'w_',
   height: 'h_',
   crop: 'c_',
@@ -319,6 +337,7 @@ const urlParameters = {
   x: 'x_',
   y: 'y_',
   fetchFormat: 'f_',
+  format: 'f_',
   quality: 'q_',
   radius: 'r_',
   angle: 'a_',
@@ -338,8 +357,45 @@ const urlParameters = {
   flags: 'fl_',
 }
 
-export default function compileImageParameter(parameter, value) {
-  if (value === null) {
+const compileTextCaption = (value: StringOverlayStyle): string => {
+  let publicIdStringStyle = value.publicId
+  if (!publicIdStringStyle) {
+    if (process.env.NODE_ENV !== 'production') {
+      validate.textCaptionStyles(value)
+    }
+    const { letterSpacing, lineSpacing } = value
+    publicIdStringStyle = [
+      value.fontFamily && encodeURIComponent(value.fontFamily),
+      value.fontSize,
+      value.fontWeight,
+      value.fontStyle,
+      value.textDecoration,
+      value.textAlign,
+      value.stroke,
+      letterSpacing ? `letter_spacing_${letterSpacing}` : 0,
+      lineSpacing ? `line_spacing_${lineSpacing}` : 0,
+    ]
+      .filter((option) => option && option !== 'normal' && option !== 'none')
+      .join('_')
+  }
+  return `text:${publicIdStringStyle}:${encodeURIComponent(value.text)}`
+}
+
+const compileBorder = (value: BorderObject): string => {
+  if (process.env.NODE_ENV !== 'production') {
+    validate.borderObjectColor(value as BorderObject)
+  }
+  if (typeof value.width !== 'string' || value.width.substr(value.width.length - 2, 2) !== 'px') {
+    value.width = (value.width || 1) + 'px'
+  }
+  return value.width + '_solid_' + value.color
+}
+
+export function compileImageParameter<T extends keyof ImageTransform>(
+  parameter: T,
+  value: ImageTransform[T] | string,
+) {
+  if (value == null) {
     return false
   }
 
@@ -351,49 +407,20 @@ export default function compileImageParameter(parameter, value) {
     case 'overlay':
     case 'underlay':
       if (typeof value === 'object') {
-        let stringStyle = value.publicId
-        if (!stringStyle) {
-          if (process.env.NODE_ENV !== 'production') {
-            validate.textCaptionStyles(value)
-          }
-          const { letterSpacing, lineSpacing } = value
-          stringStyle = [
-            encodeURIComponent(value.fontFamily),
-            value.fontSize,
-            value.fontWeight,
-            value.fontStyle,
-            value.textDecoration,
-            value.textAlign,
-            value.stroke,
-            letterSpacing ? `letter_spacing_${letterSpacing}` : 0,
-            lineSpacing ? `line_spacing_${lineSpacing}` : 0,
-          ]
-            .filter(option => option && option !== 'normal' && option !== 'none')
-            .join('_')
-        }
-        value = `text:${stringStyle}:${encodeURIComponent(value.text)}`
+        value = compileTextCaption(value as StringOverlayStyle)
       }
       break
 
     case 'border':
       if (typeof value === 'object') {
-        if (process.env.NODE_ENV !== 'production') {
-          validate.borderObjectColor(value)
-        }
-        if (
-          typeof value.width !== 'string' ||
-          value.width.substr(value.width.length - 2, 2) !== 'px'
-        ) {
-          value.width = (value.width || 1) + 'px'
-        }
-        value = value.width + '_solid_' + value.color
+        value = compileBorder(value as BorderObject)
       }
-      value = value.toLowerCase()
-    // falls through
+      value = value.toString().toLowerCase().replace('#', 'rgb:')
+      break
 
     case 'color':
     case 'background':
-      value = value.replace('#', 'rgb:')
+      value = value.toString().replace('#', 'rgb:')
 
     // no default
   }
@@ -402,8 +429,26 @@ export default function compileImageParameter(parameter, value) {
     if (!validate[parameter]) {
       throw new Error(`Cloudinary Image :: unknown transform parameter provided: '${parameter}'`)
     }
+    // @ts-ignore
     validate[parameter](value)
   }
 
   return urlParameters[parameter] + value
+}
+
+const compileImageTransform = (transform: ImageTransform) =>
+  (Object.keys(transform) as (keyof ImageTransform)[])
+    .map((param) => compileImageParameter(param, transform[param]))
+    .filter(Boolean)
+    .join(',')
+
+export const compileImageTransforms = (
+  transform: ImageTransform | ImageTransform[],
+  defaultTransform?: ImageTransform,
+) => {
+  const compiledTransform = Array.isArray(transform)
+    ? transform.map(compileImageTransform).join('/')
+    : compileImageTransform({ ...defaultTransform, ...transform })
+
+  return compiledTransform ? `/${compiledTransform}` : ''
 }
