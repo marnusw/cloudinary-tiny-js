@@ -84,6 +84,16 @@ describe('cloudinary configuration', () => {
     )
   })
 
+  it('fetchFormat auto is supported in defaults', () => {
+    const cl = cloudinary({
+      cloudName: 'demo',
+      imageTransformDefaults: { width: 200, crop: 'fill', quality: 'auto', fetchFormat: 'auto' },
+    })
+    expect(cl('something')).toBe(
+      'https://res.cloudinary.com/demo/image/upload/w_200,c_fill,q_auto,f_auto/something',
+    )
+  })
+
   it('merges a single transform with the defaults, and unsets a default when undefined is passed', () => {
     const cl = cloudinary({
       cloudName: 'demo',

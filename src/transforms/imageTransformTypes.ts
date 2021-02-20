@@ -160,8 +160,8 @@ export interface ImageTransform {
   density?: number | string
   dpr?: number | string
   effect?: string
-  fetchFormat?: ImageFileExtension
-  format?: ImageFileExtension
+  fetchFormat?: ImageFileExtension | 'auto'
+  format?: ImageFileExtension | 'auto'
   flags?: ImageFlags | string
   gravity?: Gravity
   height?: number | string
