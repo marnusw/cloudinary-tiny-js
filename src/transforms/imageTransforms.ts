@@ -1,5 +1,11 @@
 import { BorderObject, ImageTransform, StringOverlayStyle } from './imageTransformTypes'
-import { invariantImage as invariant, isNumber, shouldBeOneOf } from '../utils'
+import {
+  includes,
+  invariantImage as invariant,
+  isNumber,
+  shouldBeOneOf,
+  startsWith,
+} from '../utils'
 
 // http://cloudinary.com/documentation/image_transformation_reference#format_parameter
 const formatOptions = [
@@ -151,7 +157,7 @@ const validate: Validators = {
   height: (value: ImgOpt['height']) =>
     invariant(isNumber(value), 'height', value, 'should be a number'),
   crop: (value: ImgOpt['crop']) =>
-    invariant(value && cropOptions.includes(value), 'crop', value, shouldBeOneOf(cropOptions)),
+    invariant(value && includes(value, cropOptions), 'crop', value, shouldBeOneOf(cropOptions)),
   aspectRatio: (value: ImgOpt['aspectRatio']) =>
     invariant(
       isNumber(value) || (typeof value === 'string' && value.match(/^\d+:\d+$/)),
@@ -161,7 +167,7 @@ const validate: Validators = {
     ),
   gravity: (value: ImgOpt['gravity']) =>
     invariant(
-      gravityOptions.includes(value) || value === 'auto' || value.startsWith('auto:'),
+      includes(value, gravityOptions) || value === 'auto' || startsWith('auto:', value),
       'gravity',
       value,
       `${shouldBeOneOf(gravityOptions)}, 'auto', or a string starting with 'auto:'`,
@@ -171,7 +177,7 @@ const validate: Validators = {
   y: (value: ImgOpt['y']) => invariant(isNumber(value), 'y', value, 'should be a number'),
   format: (value: ImgOpt['fetchFormat']) =>
     invariant(
-      ['auto', ...formatOptions].includes(value),
+      includes(value, ['auto', ...formatOptions]),
       'fetchFormat',
       value,
       `${shouldBeOneOf(['auto', ...formatOptions])} or 'auto'`,
@@ -182,7 +188,8 @@ const validate: Validators = {
   quality: (value: ImgOpt['quality']) =>
     invariant(
       (isNumber(value) && 1 <= +value && +value <= 100) ||
-        (typeof value === 'string' && (value.match(/^\d+:\d+$/) || qualityOptions.includes(value))),
+        (typeof value === 'string' &&
+          (value.match(/^\d+:\d+$/) || includes(value, qualityOptions))),
       'quality',
       value,
       `${shouldBeOneOf(formatOptions)}, a number between 1 and 100, or have the form x:y`,
@@ -198,7 +205,7 @@ const validate: Validators = {
     ),
   angle: (value: ImgOpt['angle']) =>
     invariant(
-      isNumber(value) || (typeof value === 'string' && angleOptions.includes(value)),
+      isNumber(value) || (typeof value === 'string' && includes(value, angleOptions)),
       'angle',
       value,
       `${shouldBeOneOf(angleOptions)} or a number`,
@@ -232,7 +239,7 @@ const validate: Validators = {
     ),
   background: (value: ImgOpt['background']) =>
     invariant(
-      backgroundOptions.includes(value) || value.match(colorRegex),
+      includes(value, backgroundOptions) || value.match(colorRegex),
       'background',
       value,
       `${shouldBeOneOf(backgroundOptions)} or a color`,
@@ -263,12 +270,12 @@ const validate: Validators = {
       '/image_transformations#adding_text_captions',
     )
     invariant(
-      (!fontWeight || ['normal', 'bold'].includes(fontWeight)) &&
-        (!fontStyle || ['normal', 'italic'].includes(fontStyle)) &&
-        (!textDecoration || ['none', 'underline', 'strikethrough'].includes(textDecoration)) &&
+      (!fontWeight || includes(fontWeight, ['normal', 'bold'])) &&
+        (!fontStyle || includes(fontStyle, ['normal', 'italic'])) &&
+        (!textDecoration || includes(textDecoration, ['none', 'underline', 'strikethrough'])) &&
         (!textAlign ||
-          ['left', 'center', 'right', 'start', 'end', 'justify'].includes(textAlign)) &&
-        (!stroke || ['none', 'stroke'].includes(stroke)) &&
+          includes(textAlign, ['left', 'center', 'right', 'start', 'end', 'justify'])) &&
+        (!stroke || includes(stroke, ['none', 'stroke'])) &&
         (!letterSpacing || isNumber(letterSpacing)) &&
         (!lineSpacing || isNumber(lineSpacing)),
       'text caption',
@@ -280,7 +287,7 @@ const validate: Validators = {
   defaultImage: (value: ImgOpt['defaultImage']) =>
     invariant(
       value.match(/^[\w+-]+\.[\w]{3,4}$/) &&
-        formatOptions.includes(value.substr(value.indexOf('.') + 1)),
+        includes(value.substr(value.indexOf('.') + 1), formatOptions),
       'defaultImage',
       value,
       `must include a file extension which ${shouldBeOneOf(formatOptions)}`,
@@ -296,7 +303,7 @@ const validate: Validators = {
     ),
   colorSpace: (value: ImgOpt['colorSpace']) =>
     invariant(
-      colorSpaceOptions.includes(value) || value.match(/^icc:[\w+-]+\.[\w]{3,4}$/),
+      includes(value, colorSpaceOptions) || value.match(/^icc:[\w+-]+\.[\w]{3,4}$/),
       'colorSpace',
       value,
       `${shouldBeOneOf(colorSpaceOptions)} or 'icc:(public_id)'`,
@@ -319,7 +326,9 @@ const validate: Validators = {
     ),
   flags: (value: ImgOpt['flags']): asserts value is ImgOpt['flags'] => {
     invariant(
-      (Array.isArray(value) ? value : value.split('.')).every((flag) => flagOptions.includes(flag)),
+      (Array.isArray(value) ? value : value.split('.')).every((flag) =>
+        includes(flag, flagOptions),
+      ),
       'flags',
       JSON.stringify(value),
       `${shouldBeOneOf(flagOptions)}, an array of options or '.' separated options`,

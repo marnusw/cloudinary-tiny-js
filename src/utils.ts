@@ -16,7 +16,6 @@ const invariantFor = (type: string) => (
   }
 }
 
-export const invariant = invariantFor('')
 export const invariantImage = invariantFor('Image ')
 
 export const isNumber = (value: unknown) =>
@@ -24,3 +23,7 @@ export const isNumber = (value: unknown) =>
 
 export const shouldBeOneOf = (possibleValues: unknown[]) =>
   `should be one of ['${possibleValues.join(`', '`)}']`
+
+// IE11 ponyfills
+export const startsWith = (needle: string, haystack: string) => haystack.indexOf(needle) === 0
+export const includes = (needle: string, haystack: string[]) => haystack.indexOf(needle) > -1
