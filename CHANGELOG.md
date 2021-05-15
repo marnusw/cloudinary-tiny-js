@@ -1,8 +1,12 @@
+### v2.0.1 (15 May 2021)
+
+- [BUGFIX] Fix `format` and `fetchFormat` typings to accept `'auto'`. (#7)
+
 ### v2.0.0 (23 January 2021)
 
 - [BREAKING] Configuration options have changed, and some advanced options have been removed for simplicity.
 - [ENHANCEMENT] Use TypeScript for up to date typings.
-- Add Travis CS.
+- Add Travis CI.
 
 ### v1.0.0 (10 February 2020)
 

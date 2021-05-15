@@ -8,15 +8,16 @@ object of properties to a string.
 `cloudinary-tiny-js` provides the same commonly used image transformation features at a fraction of the size and without
 any dependencies.
 
-Video transformations are not supported nor are some advanced configuration options. It may also fall short on some
-advanced image transformation. Please submit issues or PRs with references to the relevant Cloudinary documentation.
+Video transformations are not currently supported nor are some advanced configuration options. It 
+may also fall short on some advanced image transformations. If you need this functionality, please 
+submit PRs with references to the relevant Cloudinary documentation.
 
 ## Usage
 
 ### Basic configuration
 
-The default export is a configuration returning a function for building Cloudinary URLs. Configuration option names
-follow the documentation on
+The default export is a configuration function returning another function for building Cloudinary 
+URLs. Configuration option names follow the documentation on
 [Transforming media assets using dynamic URLs](https://cloudinary.com/documentation/image_transformations#transforming_media_assets_using_dynamic_urls)
 and [Private CDNs and CNAMEs](https://cloudinary.com/documentation/advanced_url_delivery_options#private_cdns_and_cnames)
 . Only the `cloudName` is required. Defaults are shown below.
