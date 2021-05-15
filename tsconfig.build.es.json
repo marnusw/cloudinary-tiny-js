@@ -3,7 +3,8 @@
   "compilerOptions": {
     "noEmit": false,
     "module": "ES2020",
-    "outDir": "./es"
+    "outDir": "./es",
+    "declaration": true
   },
   "exclude": ["./src/**/*.spec.ts"]
 }
