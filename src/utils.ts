@@ -3,7 +3,7 @@ const invariantFor = (type: string) => (
   parameter: string,
   value: unknown,
   message: string,
-  source: string | null = `/image_transformation_reference#${parameter}_parameter`,
+  source: string | null = '/transformation_reference',
 ) => {
   if (!condition) {
     value = typeof value === 'string' ? `'${value}'` : value
