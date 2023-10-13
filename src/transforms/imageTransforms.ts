@@ -149,13 +149,18 @@ type Validators = { [Key in keyof ImgOpt]: (value: ImgOpt[Key]) => void } & {
 const validate: Validators = {
   width: (value: ImgOpt['width']) =>
     invariant(
-      isNumber(value) || (typeof value === 'string' && value.match(/^auto(?:$|(?::.+))/)),
+      isNumber(value) || (typeof value === 'string' && value.match(/^iw$|^auto(?:$|(?::.+))/)),
       'width',
       value,
       `should be a number, 'auto', or a string starting with 'auto:'`,
     ),
   height: (value: ImgOpt['height']) =>
-    invariant(isNumber(value), 'height', value, 'should be a number'),
+    invariant(
+      isNumber(value) || (typeof value === 'string' && value === 'ih'),
+      'height',
+      value,
+      `should be a number or 'ih'`,
+    ),
   crop: (value: ImgOpt['crop']) =>
     invariant(value && includes(value, cropOptions), 'crop', value, shouldBeOneOf(cropOptions)),
   aspectRatio: (value: ImgOpt['aspectRatio']) =>

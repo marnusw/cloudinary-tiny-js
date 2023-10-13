@@ -74,7 +74,7 @@ exports[`Image Transform Parameters gravity throws when invalid 1`] = `"Cloudina
 
 exports[`Image Transform Parameters gravity throws when invalid 2`] = `"Cloudinary Image :: gravity should be one of ['north_west', 'north', 'north_east', 'west', 'center', 'east', 'south_west', 'south', 'south_east', 'xy_center', 'face', 'face:center', 'face:auto', 'faces', 'faces:center', 'faces:auto', 'body', 'body:face', 'ocr_text', 'adv_face', 'adv_faces', 'adv_eyes', 'custom', 'custom:face', 'custom:faces', 'custom:adv_face', 'custom:adv_faces'], 'auto', or a string starting with 'auto:', received: 'auto-bad' - see http://cloudinary.com/documentation/transformation_reference"`;
 
-exports[`Image Transform Parameters height throws when invalid 1`] = `"Cloudinary Image :: height should be a number, received: 'bad' - see http://cloudinary.com/documentation/transformation_reference"`;
+exports[`Image Transform Parameters height throws when invalid 1`] = `"Cloudinary Image :: height should be a number or 'ih', received: 'bad' - see http://cloudinary.com/documentation/transformation_reference"`;
 
 exports[`Image Transform Parameters opacity throws when invalid 1`] = `"Cloudinary Image :: opacity should be a number between 0 and 100, received: -1 - see http://cloudinary.com/documentation/transformation_reference"`;
 
