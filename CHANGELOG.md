@@ -1,3 +1,7 @@
+### v2.1.0 (13 October 2023)
+
+- [ENHANCEMENT] Allow initial width/height on the width / height transform options. (#22)
+
 ### v2.0.1 (15 May 2021)
 
 - [BUGFIX] Fix `format` and `fetchFormat` typings to accept `'auto'`. (#7)
