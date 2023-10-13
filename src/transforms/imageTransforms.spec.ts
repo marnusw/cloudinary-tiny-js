@@ -14,6 +14,9 @@ describe('Image Transform Parameters', () => {
     it('accepts a string starting with `auto:`', () => {
       expect(compileImageParameter('width', 'auto:50')).toBe('w_auto:50')
     })
+    it('accepts `iw`', () => {
+      expect(compileImageParameter('width', 'iw')).toBe('w_iw')
+    })
     it('throws when invalid', () => {
       expect(() => compileImageParameter('width', 'bad:auto')).toThrowErrorMatchingSnapshot()
       expect(() => compileImageParameter('width', 'auto-bad')).toThrowErrorMatchingSnapshot()
@@ -26,6 +29,9 @@ describe('Image Transform Parameters', () => {
     })
     it('accepts a numeric string', () => {
       expect(compileImageParameter('height', '300')).toBe('h_300')
+    })
+    it('accepts `ih`', () => {
+      expect(compileImageParameter('height', 'ih')).toBe('h_ih')
     })
     it('throws when invalid', () => {
       expect(() => compileImageParameter('height', 'bad')).toThrowErrorMatchingSnapshot()
